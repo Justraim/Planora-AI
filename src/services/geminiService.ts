@@ -1,5 +1,5 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import type { ItineraryPreferences, ItineraryPlan } from './types';
+import type { ItineraryPreferences, ItineraryPlan } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
