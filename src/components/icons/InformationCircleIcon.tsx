@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const WeatherIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+export const InformationCircleIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     fill="none" 
@@ -12,7 +12,7 @@ export const WeatherIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
     <path 
       strokeLinecap="round" 
       strokeLinejoin="round" 
-      d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-2.666-2.886 5.25 5.25 0 00-10.233 2.333A4.502 4.502 0 002.25 15z" 
+      d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" 
     />
   </svg>
 );

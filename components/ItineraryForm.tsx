@@ -1,6 +1,9 @@
 import React from 'react';
 import type { ItineraryPreferences } from '../types';
 import { SparklesIcon } from './icons/SparklesIcon';
+import { CheckIcon } from './icons/CheckIcon';
+import ToggleSwitch from './ToggleSwitch';
+import NumberStepper from './NumberStepper';
 
 interface Props {
   preferences: ItineraryPreferences;
@@ -13,7 +16,6 @@ const tripPurposeOptions: string[] = ['Holiday/Vacation', 'Family Trip', 'Advent
 const excitementOptions = ["Restaurants and Food", "Cocktails and Nightlife", "Beaches and Scenic Views", "Wine Farms", "Art Galleries and Museums", "Local Markets and Shopping", "Nature and adventures"];
 const budgetOptions: Exclude<ItineraryPreferences['budget'], ''>[] = ['Budget', 'Mid range', 'Lux', 'Mix'];
 const radiusOptions: Exclude<ItineraryPreferences['travelRadius'], ''>[] = ['City Center', 'Within 15km', 'Within 30km', 'No preference'];
-const firstTimeOptions: Exclude<ItineraryPreferences['firstTime'], ''>[] = ['Yes', 'No'];
 const pacingOptions: Exclude<ItineraryPreferences['pacing'], ''>[] = ['Maximize Every Moment', 'Explore and Unwind', 'Go with the Flow'];
 
 const FormSection: React.FC<{ title: string, children: React.ReactNode, delay?: string }> = ({ title, children, delay = '0s' }) => (
@@ -23,14 +25,15 @@ const FormSection: React.FC<{ title: string, children: React.ReactNode, delay?: 
   </div>
 );
 
-const OptionButton: React.FC<{ onClick: () => void, isSelected: boolean, children: React.ReactNode}> = ({ onClick, isSelected, children }) => (
+const ChipButton: React.FC<{ onClick: () => void, isSelected: boolean, children: React.ReactNode}> = ({ onClick, isSelected, children }) => (
     <button type="button" onClick={onClick}
-      className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-200 ${
+      className={`relative px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-200 flex items-center gap-2 ${
         isSelected
           ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/30'
           : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100 hover:border-gray-400'
       }`}
     >
+      {isSelected && <CheckIcon className="w-4 h-4" />}
       {children}
     </button>
 );
@@ -67,9 +70,12 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    const isNumber = type === 'number';
-    setPreferences(prev => ({ ...prev, [name]: isNumber && value ? parseInt(value, 10) : value }));
+    const { name, value } = e.target;
+    setPreferences(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handleNumericChange = (name: keyof ItineraryPreferences, value: number) => {
+    setPreferences(prev => ({ ...prev, [name]: value }));
   };
 
   const handleOptionSelect = (name: keyof ItineraryPreferences, value: string) => {
@@ -125,14 +131,14 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                 <label className="block text-sm font-medium text-gray-700 mb-2">What's your preferred travel radius?</label>
                 <div className="flex flex-wrap gap-2">
                     {radiusOptions.map(opt => (
-                      <OptionButton key={opt} onClick={() => handleOptionSelect('travelRadius', opt)} isSelected={preferences.travelRadius === opt}>{opt}</OptionButton>
+                      <ChipButton key={opt} onClick={() => handleOptionSelect('travelRadius', opt)} isSelected={preferences.travelRadius === opt}>{opt}</ChipButton>
                     ))}
                 </div>
               </div>
           </FormSection>
 
           <FormSection title="Trip Details" delay="0.2s">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
                 <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
                 <input
@@ -145,33 +151,28 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
               </div>
               <div>
                 <label htmlFor="tripDuration" className="block text-sm font-medium text-gray-700 mb-1">How long is the trip? (days)</label>
-                <input
-                  type="number" id="tripDuration" name="tripDuration"
-                  min="1"
-                  value={preferences.tripDuration}
-                  onChange={handleInputChange}
-                  placeholder="e.g., 7"
-                  required
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                />
+                 <NumberStepper
+                    id="tripDuration"
+                    value={preferences.tripDuration === '' ? 1 : preferences.tripDuration}
+                    onChange={(value) => handleNumericChange('tripDuration', value)}
+                    min={1}
+                 />
               </div>
               <div>
                 <label htmlFor="numberOfTravelers" className="block text-sm font-medium text-gray-700 mb-1">How many people are traveling?</label>
-                <input
-                  type="number" id="numberOfTravelers" name="numberOfTravelers"
-                  min="1"
-                  value={preferences.numberOfTravelers}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                />
+                <NumberStepper
+                    id="numberOfTravelers"
+                    value={preferences.numberOfTravelers}
+                    onChange={(value) => handleNumericChange('numberOfTravelers', value)}
+                    min={1}
+                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Is this your first time there?</label>
-                <div className="flex flex-wrap gap-2">
-                  {firstTimeOptions.map(opt => (
-                      <OptionButton key={opt} onClick={() => handleOptionSelect('firstTime', opt)} isSelected={preferences.firstTime === opt}>{opt}</OptionButton>
-                    ))}
-                </div>
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-gray-700">Is this your first time there?</label>
+                <ToggleSwitch 
+                  enabled={preferences.firstTime === 'Yes'}
+                  onChange={(enabled) => handleOptionSelect('firstTime', enabled ? 'Yes' : 'No')}
+                />
               </div>
             </div>
           </FormSection>
@@ -182,17 +183,17 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                 <label className="block text-sm font-medium text-gray-700 mb-2">What's the main purpose of your trip? (Select all that apply)</label>
                 <div className="flex flex-wrap gap-2">
                   {tripPurposeOptions.map(option => (
-                    <OptionButton
+                    <ChipButton
                       key={option}
                       onClick={() => handleMultiSelectChange(option, 'tripPurpose')}
                       isSelected={preferences.tripPurpose.includes(option)}
                     >
                       {option}
-                    </OptionButton>
+                    </ChipButton>
                   ))}
                 </div>
                 {preferences.tripPurpose.includes('Other') && (
-                  <div className="mt-4">
+                  <div className="mt-4 animate-fade-in-up">
                     <label htmlFor="otherTripPurpose" className="block text-sm font-medium text-gray-700 mb-1">If other, please specify:</label>
                     <input
                       type="text"
@@ -208,27 +209,28 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
               </div>
               
               <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">What are you most excited about? (Select at least one)</label>
-                  <button
-                    type="button"
-                    onClick={handleSurpriseMe}
-                    className="text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    ✨ Surprise Me!
-                  </button>
-                </div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">What are you most excited about? (Select at least one)</label>
                 <div className="flex flex-wrap gap-2">
                   {excitementOptions.map(option => (
-                     <OptionButton
+                     <ChipButton
                         key={option}
                         onClick={() => handleMultiSelectChange(option, 'mostExcitedAbout')}
                         isSelected={preferences.mostExcitedAbout.includes(option)}
                       >
                         {option}
-                      </OptionButton>
+                      </ChipButton>
                   ))}
                 </div>
+                 <div className="mt-4">
+                    <button
+                      type="button"
+                      onClick={handleSurpriseMe}
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-blue-600 font-semibold py-2 px-4 rounded-lg border-2 border-dashed border-blue-400 hover:bg-blue-50 hover:border-blue-600 transition-all duration-300"
+                    >
+                      <SparklesIcon className="w-5 h-5 text-yellow-500" />
+                      Surprise Me!
+                    </button>
+                  </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -236,7 +238,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                     <label className="block text-sm font-medium text-gray-700 mb-2">What's your preferred budget?</label>
                     <div className="flex flex-wrap gap-2">
                         {budgetOptions.map(opt => (
-                          <OptionButton key={opt} onClick={() => handleOptionSelect('budget', opt)} isSelected={preferences.budget === opt}>{opt}</OptionButton>
+                          <ChipButton key={opt} onClick={() => handleOptionSelect('budget', opt)} isSelected={preferences.budget === opt}>{opt}</ChipButton>
                         ))}
                     </div>
                 </div>
@@ -244,7 +246,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                     <label className="block text-sm font-medium text-gray-700 mb-2">What's your ideal trip rhythm?</label>
                     <div className="flex flex-wrap gap-2">
                         {pacingOptions.map(opt => (
-                          <OptionButton key={opt} onClick={() => handleOptionSelect('pacing', opt)} isSelected={preferences.pacing === opt}>{opt}</OptionButton>
+                          <ChipButton key={opt} onClick={() => handleOptionSelect('pacing', opt)} isSelected={preferences.pacing === opt}>{opt}</ChipButton>
                         ))}
                     </div>
                 </div>

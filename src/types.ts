@@ -6,7 +6,7 @@ export interface ItineraryPreferences {
   startDate: string;
   tripDuration: number | '';
   numberOfTravelers: number;
-  firstTime: 'Yes' | 'No' | '';
+  firstTime: 'Yes' | 'No';
   tripPurpose: string[];
   otherTripPurpose?: string;
   mostExcitedAbout: string[];
@@ -31,6 +31,7 @@ export interface DailyPlan {
   title: string;
   theme: string;
   activities: Activity[];
+  note?: string;
 }
 
 export interface ItineraryPlan {

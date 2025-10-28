@@ -9,6 +9,7 @@ import { ShareIcon } from './icons/ShareIcon';
 import { PrinterIcon } from './icons/PrinterIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
+import { InformationCircleIcon } from './icons/InformationCircleIcon';
 
 interface Props {
   itinerary: ItineraryPlan;
@@ -113,6 +114,17 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
                 </div>
                  {dayDate && <p className="text-sm font-semibold text-gray-600 sm:text-right">{dayDate}</p>}
               </div>
+
+              {day.note && (
+                <div className="mb-4 bg-yellow-50 border-l-4 border-yellow-400 rounded-r-lg p-4 flex items-start">
+                  <InformationCircleIcon className="h-6 w-6 text-yellow-600 mr-3 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h5 className="font-bold text-yellow-800">Heads Up!</h5>
+                    <p className="text-sm text-yellow-700">{day.note}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="border-l-2 border-blue-200 ml-6 pl-10 py-2 space-y-6">
                 {day.activities.map((activity, index) => (
                   <div key={index} className="relative">
