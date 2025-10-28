@@ -108,7 +108,11 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
       }
     });
 
-    const jsonText = response.text.trim();
+    const text = response.text;
+    if (!text) {
+      throw new Error("Received an empty response from the AI model.");
+    }
+    const jsonText = text.trim();
     const itineraryData = JSON.parse(jsonText);
     
     if (!itineraryData.dailyPlan || !Array.isArray(itineraryData.dailyPlan)) {
@@ -153,7 +157,11 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
       }
     });
 
-    const jsonText = response.text.trim();
+    const text = response.text;
+    if (!text) {
+        throw new Error("Received an empty refined response from the AI model.");
+    }
+    const jsonText = text.trim();
     const refinedData = JSON.parse(jsonText);
     
     if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyPlan)) {
