@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import type { ItineraryPreferences, ItineraryPlan } from './types';
 import { generateItinerary, refineItinerary } from './services/geminiService';
@@ -19,6 +18,7 @@ const App: React.FC = () => {
   const [preferences, setPreferences] = useState<ItineraryPreferences>({
     name: '',
     destination: '',
+    travelFrom: '',
     travelRadius: '',
     startDate: '',
     tripDuration: '',
@@ -38,16 +38,17 @@ const App: React.FC = () => {
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
 
   useEffect(() => {
+    let interval: number;
     if (isLoading) {
-      const interval = setInterval(() => {
+      interval = window.setInterval(() => {
         setLoadingMessage(prev => {
           const currentIndex = loadingMessages.indexOf(prev);
           const nextIndex = (currentIndex + 1) % loadingMessages.length;
           return loadingMessages[nextIndex];
         });
       }, 2500);
-      return () => clearInterval(interval);
     }
+    return () => clearInterval(interval);
   }, [isLoading]);
 
 
@@ -89,6 +90,7 @@ const App: React.FC = () => {
     setPreferences({
       name: '',
       destination: '',
+      travelFrom: '',
       travelRadius: '',
       startDate: '',
       tripDuration: '',
@@ -140,7 +142,8 @@ const App: React.FC = () => {
 
             {itinerary && (
               <ItineraryDisplay 
-                itinerary={itinerary} 
+                itinerary={itinerary}
+                startDate={preferences.startDate}
                 onReset={handleReset}
                 onRefine={handleRefine}
                 isRefining={isRefining}
@@ -148,8 +151,9 @@ const App: React.FC = () => {
             )}
           </div>
         )}
-        <footer className="text-center mt-12 text-gray-500 text-sm no-print">
-          <p>Powered by AI, crafted for your next adventure.</p>
+        <footer className="text-center mt-12 text-gray-500 text-sm no-print space-y-2">
+          <p>&copy; {new Date().getFullYear()} Planora AI. All rights reserved.</p>
+          <a href="#" className="hover:text-gray-700 underline">Privacy Policy</a>
         </footer>
       </main>
     </div>

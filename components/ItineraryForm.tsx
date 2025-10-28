@@ -79,8 +79,8 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
   return (
     <>
       <div className="text-center mb-12 animate-fade-in-up">
-        <h2 className="text-5xl font-bold text-gray-800">Your Next Adventure Awaits</h2>
-        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Tell us your travel dreams, and our AI will craft a personalized itinerary just for you.</p>
+        <h2 className="text-5xl font-bold text-gray-800">Intelligent Trip Planning, Instantly</h2>
+        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Just share your travel preferences, and Planora AI will craft your perfect, personalized itinerary.</p>
       </div>
       <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-xl shadow-blue-500/10 border border-gray-200/50">
         <form onSubmit={onSubmit} className="space-y-8">
@@ -105,6 +105,17 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                   value={preferences.destination}
                   onChange={handleInputChange}
                   placeholder="e.g., Tokyo, Japan"
+                  required
+                  className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label htmlFor="travelFrom" className="block text-sm font-medium text-gray-700 mb-1">Where are you travelling from?</label>
+                <input
+                  type="text" id="travelFrom" name="travelFrom"
+                  value={preferences.travelFrom}
+                  onChange={handleInputChange}
+                  placeholder="e.g., California, USA"
                   required
                   className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                 />
@@ -255,7 +266,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
           <div className="pt-4 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <button
               type="submit"
-              disabled={isLoading || !preferences.name || !preferences.destination || !preferences.startDate || !preferences.tripDuration || preferences.tripPurpose.length === 0 || !preferences.travelRadius || !preferences.firstTime || !preferences.budget || !preferences.pacing || preferences.mostExcitedAbout.length === 0}
+              disabled={isLoading || !preferences.name || !preferences.destination || !preferences.travelFrom || !preferences.startDate || !preferences.tripDuration || preferences.tripPurpose.length === 0 || !preferences.travelRadius || !preferences.firstTime || !preferences.budget || !preferences.pacing || preferences.mostExcitedAbout.length === 0}
               className="w-full flex items-center justify-center bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 disabled:bg-blue-400 disabled:cursor-not-allowed shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40"
             >
               {isLoading ? (

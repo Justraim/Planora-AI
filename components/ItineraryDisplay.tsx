@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import type { ItineraryPlan } from '../types';
 import { WeatherIcon } from './icons/WeatherIcon';
@@ -9,9 +8,11 @@ import { LightBulbIcon } from './icons/LightBulbIcon';
 import { ShareIcon } from './icons/ShareIcon';
 import { PrinterIcon } from './icons/PrinterIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
+import { CalendarIcon } from './icons/CalendarIcon';
 
 interface Props {
   itinerary: ItineraryPlan;
+  startDate: string;
   onReset: () => void;
   onRefine: (prompt: string) => Promise<void>;
   isRefining: boolean;
@@ -26,8 +27,28 @@ const ActivityDetail: React.FC<{ icon: React.ReactNode; label: string; value: st
   </div>
 );
 
-const ItineraryDisplay: React.FC<Props> = ({ itinerary, onReset, onRefine, isRefining }) => {
+const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining }) => {
   const [refinementPrompt, setRefinementPrompt] = useState('');
+
+  const getDayDate = (dayNumber: number): string => {
+    if (!startDate) return '';
+    try {
+      const date = new Date(startDate);
+      // Adjust for timezone offset by working with UTC dates
+      date.setUTCDate(date.getUTCDate() + dayNumber - 1);
+      return date.toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC', // Ensure consistent date calculation
+      });
+    } catch (e) {
+      console.error("Invalid start date:", startDate);
+      return '';
+    }
+  };
+
 
   const handleShare = async () => {
     const shareData = {
@@ -76,16 +97,21 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, onReset, onRefine, isRef
         )}
 
         <div className="space-y-8">
-          {itinerary.dailyPlan.map(day => (
-            <div key={day.day} className="bg-white/80 p-6 rounded-xl shadow-lg shadow-blue-500/10 border border-gray-200/60 transition-shadow hover:shadow-xl">
-              <div className="flex items-center mb-4">
-                <div className="bg-blue-100 text-blue-700 rounded-full h-12 w-12 flex-shrink-0 flex items-center justify-center font-bold text-xl mr-4">
-                  {day.day}
+          {itinerary.dailyPlan.map(day => {
+            const dayDate = getDayDate(day.day);
+            return (
+            <div key={day.day} className="daily-plan-card bg-white/80 p-6 rounded-xl shadow-lg shadow-blue-500/10 border border-gray-200/60 transition-shadow hover:shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <div className="flex items-center mb-2 sm:mb-0">
+                  <div className="bg-blue-100 text-blue-700 rounded-full h-12 w-12 flex-shrink-0 flex items-center justify-center font-bold text-xl mr-4">
+                    {day.day}
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold text-gray-800">{day.title}</h3>
+                    <span className="text-sm font-medium bg-blue-200 text-blue-800 px-2.5 py-0.5 rounded-full">{day.theme}</span>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-gray-800">{day.title}</h3>
-                  <span className="text-sm font-medium bg-blue-200 text-blue-800 px-2.5 py-0.5 rounded-full">{day.theme}</span>
-                </div>
+                 {dayDate && <p className="text-sm font-semibold text-gray-600 sm:text-right">{dayDate}</p>}
               </div>
               <div className="border-l-2 border-blue-200 ml-6 pl-10 py-2 space-y-6">
                 {day.activities.map((activity, index) => (
@@ -101,11 +127,25 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, onReset, onRefine, isRef
                       {activity.estimatedCost && <ActivityDetail icon={<CurrencyDollarIcon />} label="Cost" value={activity.estimatedCost} />}
                       {activity.tip && <ActivityDetail icon={<LightBulbIcon />} label="Tip" value={activity.tip} />}
                     </div>
+                    
+                    {activity.reservationLink && (
+                      <div className="mt-4">
+                        <a 
+                          href={activity.reservationLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center bg-green-100 text-green-800 font-bold py-2 px-4 rounded-lg hover:bg-green-200 transition-colors duration-300 text-sm"
+                        >
+                          <CalendarIcon className="h-5 w-5 mr-2" />
+                          Book a Table
+                        </a>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
-          ))}
+          )})}
         </div>
       </div>
 

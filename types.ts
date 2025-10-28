@@ -1,6 +1,7 @@
 export interface ItineraryPreferences {
   name: string;
   destination: string;
+  travelFrom: string;
   travelRadius: 'City Center' | 'Within 15km' | 'Within 30km' | 'No preference' | '';
   startDate: string;
   tripDuration: number | '';
@@ -22,6 +23,7 @@ export interface Activity {
   tradingHours?: string;
   estimatedCost?: string;
   tip?: string;
+  reservationLink?: string;
 }
 
 export interface DailyPlan {

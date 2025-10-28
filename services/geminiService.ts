@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { ItineraryPreferences, ItineraryPlan } from '../types';
 
@@ -32,8 +31,9 @@ const itinerarySchema = {
                 details: { type: Type.STRING, description: "Optional: A brief sentence with extra detail about the experience." },
                 distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Center'." },
                 tradingHours: { type: Type.STRING, description: "Operating hours, e.g., '9:00 AM - 5:00 PM' or '24/7'." },
-                estimatedCost: { type: Type.STRING, description: "Estimated cost per person, e.g., '$25 USD' or 'Free'." },
+                estimatedCost: { type: Type.STRING, description: "Estimated cost per person. This MUST follow the currency conversion rules." },
                 tip: { type: Type.STRING, description: "A single, helpful tip for the activity, e.g., 'Book tickets online to avoid queues.'" },
+                reservationLink: { type: Type.STRING, description: "If the activity is a restaurant, provide a direct, valid, and working reservation link if available. Prioritize official websites, Google Maps, or major booking platforms. If a valid link cannot be found, omit this field." },
               },
               required: ['time', 'description'],
             },
@@ -59,9 +59,10 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
 
   const prompt = `
     Create a personalized travel itinerary for ${preferences.name}.
-    Act as an expert travel planner with a knack for creating memorable and well-structured trips.
+    Act as an expert travel planner with a knack for creating memorable, practical, and well-structured trips.
 
     **Core Details:**
+    - **Traveling From:** ${preferences.travelFrom} (User's home country/city)
     - **Destination:** ${preferences.destination}
     - **Travel Radius:** ${preferences.travelRadius}. Interpret this as follows:
         - 'City Center': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
@@ -83,17 +84,15 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     - **Top Interests:** ${preferences.mostExcitedAbout.join(', ')}
     - **Specific Inclusions/Requests:** ${preferences.specificInclusions || 'None'}
 
-    **Generation Instructions:**
-    1.  Generate a detailed, day-by-day itinerary for the specified duration. The output must follow the provided JSON schema precisely.
-    2.  Provide a 'weather' summary for the destination based on the start date and time of year.
-    3.  For **each activity**, you must provide the following details where applicable and available:
-        - \`estimatedCost\`: e.g., "$20 USD", "Free".
-        - \`tradingHours\`: e.g., "10:00 AM - 6:00 PM".
-        - \`distanceFromCenter\`: e.g., "3km from city center".
-        - \`tip\`: A single, practical tip. e.g., "Buy tickets online to skip the line."
-    4.  The itinerary must flow logically, be geographically sensible based on the travel radius, and align perfectly with all the user's stated preferences, especially the daily rhythm.
-    5.  Tailor recommendations to the number of travelers and the trip's purpose (e.g., family-friendly spots for a 'Family Trip', romantic settings for a 'Romantic Getaway').
-    6.  If it's their first time, include must-see landmarks. If not, suggest more local or off-the-beaten-path experiences.
+    **CRITICAL Generation Instructions:**
+    1.  **Smart Currency Conversion:** You MUST compare the 'Traveling From' location with the 'Destination'.
+        - If the trip is **international** (e.g., USA to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. $20 USD)".
+        - If the trip is **domestic** (e.g., USA to USA), just use the local currency. Example: "$25 USD".
+    2.  **Reliable Restaurant Reservations:** For any restaurant or dining activity, you MUST search for a valid, working reservation link. Prioritize official websites, Google Maps links, or major reservation platforms like OpenTable. **DO NOT invent or provide a non-working URL.** If you cannot find a valid link, omit the \`reservationLink\` field entirely.
+    3.  **Detailed Activities:** For **each activity**, provide all applicable details: \`estimatedCost\` (following currency rules), \`tradingHours\`, \`distanceFromCenter\`, and a practical \`tip\`.
+    4.  The output must follow the provided JSON schema precisely.
+    5.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
+    6.  Tailor recommendations to the number of travelers and trip purpose.
     7.  Address the user by their name, ${preferences.name}, in the summary.
   `;
 
@@ -138,8 +137,9 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     **Instructions:**
     1.  Read the original itinerary and the user's request carefully.
     2.  Intelligently modify the \`dailyPlan\` and any other relevant fields (like \`summary\`) to reflect the user's request.
-    3.  Ensure the updated plan remains logical, geographically sensible, and consistent.
-    4.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
+    3.  Remember to adhere to all original constraints like currency conversion and reliable reservation links if you add new activities.
+    4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
+    5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
   `;
 
   try {
