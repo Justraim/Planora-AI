@@ -5,14 +5,14 @@ const Logo: React.FC = () => {
     <div className="flex flex-col items-center">
       <div className="flex items-baseline">
         <span 
-          className="text-4xl font-bold text-gray-900 tracking-tight" 
+          className="text-4xl font-bold text-gray-900 tracking-tight italic" 
           style={{ fontFamily: "'Playfair Display', serif" }}
         >
-          Planora
+          Itinerae
         </span>
         <span 
-          className="text-4xl font-bold text-cyan-500" 
-          style={{ fontFamily: "'Inter', sans-serif", marginLeft: '2px' }}
+          className="text-4xl font-extrabold text-cyan-500" 
+          style={{ fontFamily: "'Inter', sans-serif", marginLeft: '4px' }}
         >
           AI
         </span>

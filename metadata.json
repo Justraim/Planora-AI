@@ -1,5 +1,5 @@
 {
-  "name": "Planora AI",
+  "name": "Itinerae AI",
   "description": "An application that automates the creation of personalized travel itineraries. Users input their travel preferences, and the app leverages the Gemini API to generate a detailed, day-by-day travel plan, replacing the manual creation process.",
   "requestFramePermissions": []
 }

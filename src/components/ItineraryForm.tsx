@@ -86,7 +86,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
     <>
       <div className="text-center mb-12 animate-fade-in-up">
         <h2 className="text-5xl font-bold text-gray-800">Intelligent Trip Planning, Instantly</h2>
-        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Just share your travel preferences, and Planora AI will craft your perfect, personalized itinerary.</p>
+        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Just share your travel preferences, and Itinerae AI will craft your perfect, personalized itinerary.</p>
       </div>
       <div className="max-w-4xl mx-auto bg-white/70 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-xl shadow-blue-500/10 border border-gray-200/50">
         <form onSubmit={onSubmit} className="space-y-8">

@@ -187,7 +187,7 @@ const App: React.FC = () => {
       <main className="container mx-auto px-4 py-8 md:py-12">
         {renderContent()}
         <footer className="text-center mt-12 text-gray-500 text-sm no-print space-y-2">
-          <p>&copy; {new Date().getFullYear()} Planora AI. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Itinerae AI. All rights reserved.</p>
           <a href="#" className="hover:text-gray-700 underline">Privacy Policy</a>
         </footer>
       </main>

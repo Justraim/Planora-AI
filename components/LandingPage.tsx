@@ -85,6 +85,54 @@ const allSampleItineraries: SampleItinerary[] = [
         mostExcitedAbout: ["Nature and adventures", "Beaches and Scenic Views"],
     }
   },
+    {
+    title: "Rome",
+    duration: "6 Days",
+    budget: "Mid range",
+    patternClass: "pattern-2",
+    textColor: "text-amber-900",
+    description: "Walk through history in the Eternal City, from the Colosseum to the Vatican, indulging in pasta and gelato along the way.",
+    preferences: {
+        destination: "Rome, Italy",
+        tripDuration: 6,
+        budget: "Mid range",
+        pacing: "Explore and Unwind",
+        tripPurpose: ["Cultural Exploration", "Holiday/Vacation"],
+        mostExcitedAbout: ["Art Galleries and Museums", "Restaurants and Food"],
+    }
+  },
+  {
+    title: "Thai Islands",
+    duration: "12 Days",
+    budget: "Budget",
+    patternClass: "pattern-1",
+    textColor: "text-teal-900",
+    description: "Island hop between Phuket and Koh Samui, discovering pristine beaches, vibrant nightlife, and world-class snorkeling.",
+    preferences: {
+        destination: "Phuket & Koh Samui, Thailand",
+        tripDuration: 12,
+        budget: "Budget",
+        pacing: "Go with the Flow",
+        tripPurpose: ["Holiday/Vacation"],
+        mostExcitedAbout: ["Beaches and Scenic Views", "Cocktails and Nightlife"],
+    }
+  },
+  {
+    title: "Swiss Alps",
+    duration: "8 Days",
+    budget: "Lux",
+    patternClass: "pattern-4",
+    textColor: "text-slate-900",
+    description: "Breathe in fresh mountain air, hike through stunning alpine meadows, and relax in charming villages in Interlaken.",
+    preferences: {
+        destination: "Interlaken, Switzerland",
+        tripDuration: 8,
+        budget: "Lux",
+        pacing: "Go with the Flow",
+        tripPurpose: ["Adventure and Hiking"],
+        mostExcitedAbout: ["Nature and adventures", "Beaches and Scenic Views"],
+    }
+  },
 ];
 
 const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, patternClass, textColor, onSelect }) => (
@@ -129,7 +177,7 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
     <div className="space-y-16">
       <div className="text-center pt-8 animate-fade-in-up">
         <h1 className="text-5xl md:text-6xl font-bold text-gray-800">Your Perfect Trip, Planned in Seconds</h1>
-        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Stop worrying about the details. Let Planora AI craft a personalized travel itinerary that matches your style, budget, and dreams.</p>
+        <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Stop worrying about the details. Let Itinerae AI craft a personalized travel itinerary that matches your style, budget, and dreams.</p>
         <button
           onClick={onStart}
           className="mt-8 bg-blue-600 text-white font-bold py-3 px-8 rounded-lg text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40"
