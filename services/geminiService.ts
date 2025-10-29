@@ -20,6 +20,7 @@ const itinerarySchema = {
           day: { type: Type.INTEGER, description: "The day number (e.g., 1, 2, 3)." },
           title: { type: Type.STRING, description: "A short, thematic title for the day. e.g., 'Ancient Temples & Modern Marvels'" },
           theme: { type: Type.STRING, description: "A one-word theme for the day. e.g., 'History', 'Food', 'Adventure'." },
+          note: { type: Type.STRING, description: "Optional: If there is a public holiday or significant local event on this day, add a note explaining what it is and how it might impact the plan (e.g., 'Public Holiday: Bastille Day - expect large crowds and fireworks.'). Omit this field if there are no relevant events." },
           activities: {
             type: Type.ARRAY,
             description: "An array of activities for the day.",
@@ -88,11 +89,13 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     1.  **Smart Currency Conversion:** You MUST compare the 'Traveling From' location with the 'Destination'.
         - If the trip is **international** (e.g., USA to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. $20 USD)".
         - If the trip is **domestic** (e.g., USA to USA), just use the local currency. Example: "$25 USD".
-    2.  **Reliable Restaurant Reservations:** For any restaurant or dining activity, you MUST search for a valid, working reservation link. Prioritize official websites, Google Maps links, or major reservation platforms like OpenTable. **DO NOT invent or provide a non-working URL.** If you cannot find a valid link, omit the \`reservationLink\` field entirely.
-    3.  **Detailed Activities:** For **each activity**, provide all applicable details: \`estimatedCost\` (following currency rules), \`tradingHours\`, \`distanceFromCenter\`, and a practical \`tip\`.
-    4.  The output must follow the provided JSON schema precisely.
-    5.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
-    6.  Tailor recommendations to the number of travelers and trip purpose.
+    2.  **Venue & Holiday Awareness (VERY IMPORTANT):**
+        - **Check Operating Days:** Before suggesting an activity like a museum or gallery, verify its typical operating days. For example, many European museums are closed on Mondays. If a venue is likely to be closed on the planned day, DO NOT include it. Suggest a suitable alternative instead.
+        - **Research Events & Holidays:** Check for any public holidays, major festivals, or significant events in the destination that coincide with the trip dates. If an event exists, add a concise \`note\` to that day's plan explaining the event and its potential impact (e.g., "Public Holiday: Expect many closures and parades."). If there are no events, omit the \`note\` field.
+    3.  **Reliable Restaurant Reservations:** For any restaurant or dining activity, you MUST search for a valid, working reservation link. Prioritize official websites, Google Maps links, or major reservation platforms like OpenTable. **DO NOT invent or provide a non-working URL.** If you cannot find a valid link, omit the \`reservationLink\` field entirely.
+    4.  **Detailed Activities:** For **each activity**, provide all applicable details: \`estimatedCost\` (following currency rules), \`tradingHours\`, \`distanceFromCenter\`, and a practical \`tip\`.
+    5.  The output must follow the provided JSON schema precisely.
+    6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
     7.  Address the user by their name, ${preferences.name}, in the summary.
   `;
 
@@ -108,7 +111,11 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
       }
     });
 
-    const jsonText = response.text.trim();
+    const text = response.text;
+    if (!text) {
+      throw new Error("Received an empty response from the AI model.");
+    }
+    const jsonText = text.trim();
     const itineraryData = JSON.parse(jsonText);
     
     if (!itineraryData.dailyPlan || !Array.isArray(itineraryData.dailyPlan)) {
@@ -137,7 +144,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     **Instructions:**
     1.  Read the original itinerary and the user's request carefully.
     2.  Intelligently modify the \`dailyPlan\` and any other relevant fields (like \`summary\`) to reflect the user's request.
-    3.  Remember to adhere to all original constraints like currency conversion and reliable reservation links if you add new activities.
+    3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, and reliable reservation links if you add new activities.
     4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
   `;
@@ -153,7 +160,11 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
       }
     });
 
-    const jsonText = response.text.trim();
+    const text = response.text;
+    if (!text) {
+        throw new Error("Received an empty refined response from the AI model.");
+    }
+    const jsonText = text.trim();
     const refinedData = JSON.parse(jsonText);
     
     if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyPlan)) {
