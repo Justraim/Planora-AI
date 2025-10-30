@@ -16,9 +16,13 @@ export default {
           hover: '#3395FF',
         },
         border: '#E5E7EB',     // Light Gray for borders
+        teal: {
+          '500': '#00838F' // Teal color for "AI" in logo
+        }
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        serif: ['Playfair Display', 'serif'],
       },
       boxShadow: {
         'subtle': '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)',
