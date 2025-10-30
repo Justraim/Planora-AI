@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ItineraryPreferences } from '../types';
+import { CityscapeIcon } from './icons/CityscapeIcon';
+import { MountainIcon } from './icons/MountainIcon';
 
 interface Props {
   onStart: () => void;
@@ -12,7 +14,7 @@ interface SampleItinerary {
   budget: ItineraryPreferences['budget'];
   description: string;
   preferences: Partial<ItineraryPreferences>;
-  imageUrl: string;
+  icon: React.FC<React.SVGProps<SVGSVGElement>>;
 }
 
 const sampleItineraries: SampleItinerary[] = [
@@ -21,7 +23,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "3 Days",
     budget: "Mid range",
     description: "Wander through cobblestone streets and cruise along scenic canals.",
-    imageUrl: "https://images.unsplash.com/photo-1596701836640-153315287d63?q=80&w=2070&auto=format&fit=crop",
+    icon: CityscapeIcon,
     preferences: {
       destination: "Bruges, Belgium",
       tripDuration: 3,
@@ -36,7 +38,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Mid range",
     description: "Charming stone villages, rolling hills, and cozy pubs.",
-    imageUrl: "https://images.unsplash.com/photo-1600579979189-53e33c407a4a?q=80&w=1974&auto=format&fit=crop",
+    icon: CityscapeIcon,
     preferences: {
         destination: "The Cotswolds, UK",
         tripDuration: 4,
@@ -51,7 +53,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Lux",
     description: "Chase the Aurora Borealis and explore stunning ice caves.",
-    imageUrl: "https://images.unsplash.com/photo-1534570122622-54d5e5b6a49e?q=80&w=1974&auto=format&fit=crop",
+    icon: MountainIcon,
     preferences: {
         destination: "Reykjavik, Iceland",
         tripDuration: 5,
@@ -70,17 +72,13 @@ const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: st
   'Mix': 'bg-yellow-100 text-yellow-800',
 };
 
-const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
+const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, icon: Icon }) => (
     <button
       onClick={onSelect}
-      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group flex flex-col"
+      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group flex flex-col hover:-translate-y-1"
     >
-      <div className="relative h-48 w-full overflow-hidden">
-        <img 
-            src={imageUrl}
-            alt={title}
-            className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
-        />
+      <div className="relative h-48 w-full overflow-hidden bg-gray-100 flex items-center justify-center p-6">
+        <Icon className="w-24 h-24 text-gray-300 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-accent" />
       </div>
       <div className="p-5 flex-grow flex flex-col">
          <h3 className="text-lg font-bold text-primary">{title}</h3>
