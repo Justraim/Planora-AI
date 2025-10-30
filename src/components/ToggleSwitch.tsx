@@ -18,7 +18,7 @@ const ToggleSwitch: React.FC<Props> = ({ enabled, onChange, ariaLabel }) => {
           onChange={() => onChange(!enabled)}
           aria-label={ariaLabel}
         />
-        <div className="toggle-bg bg-surface border-2 border-border h-6 w-11 rounded-full transition-colors ease-in-out duration-200"></div>
+        <div className="toggle-bg bg-gray-200 border-2 border-transparent h-6 w-11 rounded-full transition-colors ease-in-out duration-200"></div>
       </div>
     </label>
   );

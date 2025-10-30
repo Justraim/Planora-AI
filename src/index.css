@@ -10,9 +10,9 @@
   h1, h2, h3, h4, h5, h6 {
     @apply text-primary font-semibold;
   }
-  /* Style for date picker icon for dark mode */
+  /* Style for date picker icon for light mode */
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(0.8);
+    filter: invert(0.5) brightness(1);
   }
 }
 

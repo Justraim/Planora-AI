@@ -7,18 +7,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#000000',
-        surface: '#151516',
-        primary: '#F5F5F7', // Primary text
-        secondary: '#86868B', // Secondary text
+        background: '#F9FAFB', // Light Gray
+        surface: '#FFFFFF',   // White
+        primary: '#1F2937',   // Dark Gray for text
+        secondary: '#6B7280', // Medium Gray for text
         accent: {
-          DEFAULT: '#2997FF',
-          hover: '#53ABFF',
+          DEFAULT: '#007AFF', // A more Apple-like blue
+          hover: '#3395FF',
         },
-        border: '#2b2b2d',
+        border: '#E5E7EB',     // Light Gray for borders
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+      },
+      boxShadow: {
+        'subtle': '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)',
       },
       animation: {
         'fade-in-up': 'fade-in-up 0.5s ease-out forwards',

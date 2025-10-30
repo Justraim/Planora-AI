@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { ItineraryPreferences } from '../types';
-import { SparklesIcon } from './icons/SparklesIcon';
 import { ClockIcon } from './icons/ClockIcon';
 import { CurrencyDollarIcon } from './icons/CurrencyDollarIcon';
-import { MountainIcon } from './icons/MountainIcon';
-import { TempleIcon } from './icons/TempleIcon';
-import { EiffelTowerIcon } from './icons/EiffelTowerIcon';
-import { PalmTreeIcon } from './icons/PalmTreeIcon';
 
 interface Props {
   onStart: () => void;
@@ -18,11 +13,8 @@ interface SampleItinerary {
   duration: string;
   budget: ItineraryPreferences['budget'];
   description: string;
-  bgColor: string;
-  titleColor: string;
-  textColor: string;
   preferences: Partial<ItineraryPreferences>;
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  imageUrl: string;
 }
 
 const sampleItineraries: SampleItinerary[] = [
@@ -30,10 +22,8 @@ const sampleItineraries: SampleItinerary[] = [
     title: "Cape Town",
     duration: "8 Days",
     budget: "Mid range",
-    bgColor: "bg-[#0c2a4c]",
-    titleColor: "text-blue-200/50",
-    textColor: "text-blue-200",
-    description: "Discover the stunning beauty of Table Mountain, vibrant neighborhoods, and the rich history of South Africa's Mother City.",
+    description: "Discover the beauty of Table Mountain and the rich history of South Africa's Mother City.",
+    imageUrl: "https://images.unsplash.com/photo-1576487248805-cf40f3c02882?q=80&w=2070&auto=format&fit=crop",
     preferences: {
       destination: "Cape Town, South Africa",
       tripDuration: 8,
@@ -42,16 +32,13 @@ const sampleItineraries: SampleItinerary[] = [
       tripPurpose: ["Adventure and Hiking", "Cultural Exploration"],
       mostExcitedAbout: ["Beaches and Scenic Views", "Nature and adventures", "Wine Farms"],
     },
-    icon: MountainIcon,
   },
   {
     title: "Kyoto",
     duration: "7 Days",
     budget: "Mid range",
-    bgColor: "bg-[#4a1a2c]",
-    titleColor: "text-red-200/50",
-    textColor: "text-red-200",
-    description: "Immerse yourself in ancient temples, serene gardens, and traditional arts. A journey through the heart of old Japan.",
+    description: "Immerse yourself in ancient temples, serene gardens, and traditional arts in old Japan.",
+    imageUrl: "https://images.unsplash.com/photo-1536531015638-3c35b1599d8d?q=80&w=1974&auto=format&fit=crop",
     preferences: {
         destination: "Kyoto, Japan",
         tripDuration: 7,
@@ -60,16 +47,13 @@ const sampleItineraries: SampleItinerary[] = [
         tripPurpose: ["Cultural Exploration"],
         mostExcitedAbout: ["Art Galleries and Museums", "Restaurants and Food", "Nature and adventures"],
     },
-    icon: TempleIcon,
   },
   {
     title: "Paris",
     duration: "4 Days",
     budget: "Lux",
-    bgColor: "bg-[#3a255c]",
-    titleColor: "text-purple-200/50",
-    textColor: "text-purple-200",
-    description: "Experience the magic of the City of Light with museum visits, charming cafés, and romantic evening strolls.",
+    description: "Experience the magic of the City of Light with museums, charming cafés, and romantic strolls.",
+    imageUrl: "https://images.unsplash.com/photo-1502602898657-3e91760c0337?q=80&w=1974&auto=format&fit=crop",
     preferences: {
         destination: "Paris, France",
         tripDuration: 4,
@@ -78,16 +62,13 @@ const sampleItineraries: SampleItinerary[] = [
         tripPurpose: ["Romantic Getaway"],
         mostExcitedAbout: ["Art Galleries and Museums", "Restaurants and Food", "Cocktails and Nightlife"],
     },
-    icon: EiffelTowerIcon,
   },
   {
     title: "Costa Rica",
     duration: "10 Days",
     budget: "Budget",
-    bgColor: "bg-[#164a3f]",
-    titleColor: "text-green-200/50",
-    textColor: "text-green-200",
-    description: "Explore lush rainforests, volcanic landscapes, and stunning coastlines. An action-packed trip for nature lovers.",
+    description: "Explore lush rainforests, volcanic landscapes, and stunning coastlines for nature lovers.",
+    imageUrl: "https://images.unsplash.com/photo-1532598199736-54de93d395a1?q=80&w=2070&auto=format&fit=crop",
     preferences: {
         destination: "Costa Rica",
         tripDuration: 10,
@@ -96,36 +77,31 @@ const sampleItineraries: SampleItinerary[] = [
         tripPurpose: ["Adventure and Hiking"],
         mostExcitedAbout: ["Nature and adventures", "Beaches and Scenic Views"],
     },
-    icon: PalmTreeIcon,
   },
 ];
 
-const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, bgColor, titleColor, textColor, onSelect, icon: Icon }) => (
-  <button 
-    onClick={onSelect} 
-    className={`relative text-left w-full h-64 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1.5 border border-white/10 group ${bgColor}`}
-  >
-    <Icon className={`absolute top-5 left-5 w-10 h-10 ${textColor} opacity-20 group-hover:opacity-40 transition-opacity duration-300`} />
-    <div className="p-6 flex flex-col justify-between h-full bg-gradient-to-t from-black/20 to-transparent">
-        <div>
-            <h2 className={`font-serif text-8xl font-bold ${titleColor} group-hover:opacity-100 transition-opacity duration-300 absolute -bottom-4 -right-2 select-none`}>
-                {title}
-            </h2>
-            <p className={`font-semibold mb-3 ${textColor}`}>{description}</p>
+const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
+    <button
+      onClick={onSelect}
+      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-shadow duration-300 hover:shadow-lg group"
+    >
+      <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${imageUrl})` }}></div>
+      <div className="p-5">
+        <h3 className="text-lg font-bold text-primary">{title}</h3>
+        <p className="text-sm mt-1 mb-4 text-secondary">{description}</p>
+        <div className="flex items-center text-xs font-medium gap-4 pt-3 border-t border-border text-secondary">
+          <div className="flex items-center gap-1.5">
+            <ClockIcon className="w-4 h-4" />
+            <span>{duration}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <CurrencyDollarIcon className="w-4 h-4" />
+            <span>{budget}</span>
+          </div>
         </div>
-        <div className={`flex items-center justify-start text-sm font-medium gap-4 pt-3 border-t border-white/10 ${textColor}`}>
-            <div className="flex items-center gap-1.5">
-              <ClockIcon className="w-4 h-4" />
-              <span>{duration}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CurrencyDollarIcon className="w-4 h-4" />
-              <span>{budget}</span>
-            </div>
-        </div>
-    </div>
-  </button>
-);
+      </div>
+    </button>
+  );
 
 
 const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
@@ -138,24 +114,23 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
   }, []);
 
   return (
-    <div className="space-y-16">
-      <div className="text-center pt-8 animate-fade-in-up">
-        <h1 className="text-5xl md:text-6xl font-bold text-accent-soft">Your Perfect Trip, Planned in Seconds</h1>
-        <p className="mt-4 text-lg text-gray-300 max-w-2xl mx-auto">Stop worrying about the details. Let Itinerae AI craft a personalized travel itinerary that matches your style, budget, and dreams.</p>
+    <div className="space-y-24">
+      <div className="text-center pt-8 animate-fade-in-up max-w-3xl mx-auto">
+        <h1 className="text-5xl md:text-6xl font-bold">Your perfect trip, planned in seconds.</h1>
+        <p className="mt-6 text-lg text-secondary">
+          Stop worrying about the details. Let Itinerae AI craft a personalized travel itinerary that matches your style, budget, and dreams.
+        </p>
         <button
           onClick={onStart}
-          className="mt-8 bg-accent text-primary font-bold py-3 px-8 rounded-lg text-lg hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary focus:ring-accent transition-all duration-300 transform hover:scale-105 shadow-lg shadow-accent/20 hover:shadow-xl hover:shadow-accent/30"
+          className="mt-8 bg-accent text-white font-semibold py-3 px-6 rounded-lg hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent/30 transition-all duration-300"
         >
-          <div className="flex items-center gap-2">
-            <SparklesIcon className="h-6 w-6" />
-            Create My Free Itinerary
-          </div>
+          Create My Itinerary
         </button>
       </div>
 
       <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-3xl font-bold text-center text-accent-soft mb-8">Get Inspired</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <h2 className="text-3xl font-bold text-center mb-8">Or get inspired</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedItineraries.map((itinerary) => (
             <SampleCard 
               key={itinerary.title} 

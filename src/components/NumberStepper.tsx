@@ -29,7 +29,7 @@ const NumberStepper: React.FC<Props> = ({ id, value, onChange, min = 1, max }) =
         type="button"
         onClick={handleDecrement}
         disabled={value <= min}
-        className="p-2 rounded-full bg-border text-secondary hover:bg-border/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-full bg-gray-200 text-secondary hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Decrement"
       >
         <MinusIcon className="w-4 h-4" />
@@ -47,7 +47,7 @@ const NumberStepper: React.FC<Props> = ({ id, value, onChange, min = 1, max }) =
         type="button"
         onClick={handleIncrement}
         disabled={max !== undefined && value >= max}
-        className="p-2 rounded-full bg-border text-secondary hover:bg-border/80 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-full bg-gray-200 text-secondary hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Increment"
       >
         <PlusIcon className="w-4 h-4" />

@@ -30,7 +30,7 @@ const ChipButton: React.FC<{ onClick: () => void, isSelected: boolean, children:
       className={`px-4 py-2 rounded-lg text-sm font-medium border transition-all duration-200 flex items-center justify-center gap-2 ${
         isSelected
           ? 'bg-accent text-white border-accent'
-          : 'bg-surface border-border text-primary hover:bg-border'
+          : 'bg-background border-border text-primary hover:bg-gray-100'
       }`}
     >
       {isSelected && <CheckIcon className="w-4 h-4" />}
@@ -88,7 +88,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
         <h2 className="text-5xl font-bold">Plan your adventure.</h2>
         <p className="mt-4 text-lg text-secondary">Just share your travel preferences, and our AI will craft your perfect, personalized itinerary.</p>
       </div>
-      <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-border">
+      <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl shadow-subtle border border-border">
         <form onSubmit={onSubmit} className="space-y-8">
 
           <FormSection title="The Basics" delay="0.1s">
@@ -269,7 +269,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
             <button
               type="submit"
               disabled={isLoading || !preferences.name || !preferences.destination || !preferences.travelFrom || !preferences.startDate || !preferences.tripDuration || preferences.tripPurpose.length === 0 || !preferences.travelRadius || !preferences.firstTime || !preferences.budget || !preferences.pacing || preferences.mostExcitedAbout.length === 0}
-              className="w-full flex items-center justify-center bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-accent-hover transition-all duration-300 disabled:bg-accent/60 disabled:cursor-not-allowed"
+              className="w-full flex items-center justify-center bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-accent-hover transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 'Generating...'

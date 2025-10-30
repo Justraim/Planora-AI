@@ -131,7 +131,7 @@ const App: React.FC = () => {
 
     if (isLoading) {
       return (
-        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-border">
+        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl shadow-subtle border border-border">
           <div className="text-center py-16">
             <LoadingSpinner />
             <p className="mt-4 text-lg text-secondary transition-opacity duration-500">{loadingMessage}</p>
@@ -143,9 +143,9 @@ const App: React.FC = () => {
 
     if (error) {
        return (
-        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-red-500/40">
+        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl shadow-subtle border border-red-500/40">
           <div className="text-center py-16">
-            <p className="text-red-400 font-semibold">{error}</p>
+            <p className="text-red-500 font-semibold">{error}</p>
             <button
               onClick={handleReset}
               className="mt-6 bg-accent text-white font-bold py-2 px-6 rounded-lg hover:bg-accent-hover transition-colors duration-300"
@@ -159,7 +159,7 @@ const App: React.FC = () => {
 
     if (itinerary) {
       return (
-        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-border">
+        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl shadow-subtle border border-border">
           <ItineraryDisplay 
             itinerary={itinerary}
             startDate={preferences.startDate}

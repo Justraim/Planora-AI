@@ -83,16 +83,13 @@ const sampleItineraries: SampleItinerary[] = [
 const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
     <button
       onClick={onSelect}
-      style={{ backgroundImage: `url(${imageUrl})` }}
-      className="relative text-left w-full h-64 rounded-2xl bg-cover bg-center overflow-hidden transition-transform duration-300 transform hover:scale-105 group"
+      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-shadow duration-300 hover:shadow-lg group"
     >
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
-      <div className="relative p-6 flex flex-col justify-end h-full text-white">
-        <div>
-          <h3 className="text-xl font-bold">{title}</h3>
-          <p className="text-sm mt-1 mb-4 opacity-90">{description}</p>
-        </div>
-        <div className="flex items-center text-xs font-medium gap-4 pt-3 border-t border-white/20">
+      <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${imageUrl})` }}></div>
+      <div className="p-5">
+        <h3 className="text-lg font-bold text-primary">{title}</h3>
+        <p className="text-sm mt-1 mb-4 text-secondary">{description}</p>
+        <div className="flex items-center text-xs font-medium gap-4 pt-3 border-t border-border text-secondary">
           <div className="flex items-center gap-1.5">
             <ClockIcon className="w-4 h-4" />
             <span>{duration}</span>
@@ -119,7 +116,7 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
   return (
     <div className="space-y-24">
       <div className="text-center pt-8 animate-fade-in-up max-w-3xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold">Your perfect trip, planned in seconds.</h1>
+        <h1 className="text-5xl md:text-6xl font-bold">Your perfect trip, planned in seconds.</h1>
         <p className="mt-6 text-lg text-secondary">
           Stop worrying about the details. Let Itinerae AI craft a personalized travel itinerary that matches your style, budget, and dreams.
         </p>
