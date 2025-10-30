@@ -5,27 +5,25 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
-    @apply bg-primary text-secondary;
+    @apply bg-background text-primary antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', serif;
-    @apply text-accent-soft;
+    @apply text-primary font-semibold;
   }
-  /* Style for date picker icon */
+  /* Style for date picker icon for dark mode */
   input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.8) brightness(100%) sepia(100%) saturate(10000%) hue-rotate(30deg);
+    filter: invert(1) brightness(0.8);
   }
 }
 
-/* Styles for ToggleSwitch */
+/* New iOS-style ToggleSwitch */
 .toggle-bg:after {
   content: '';
-  @apply absolute top-0.5 left-0.5 bg-white border border-gray-300 rounded-full h-5 w-5 transition-transform shadow-sm;
+  @apply absolute top-[2px] left-[2px] bg-white rounded-full h-5 w-5 transition-transform shadow;
 }
 
 input:checked + .toggle-bg:after {
-  transform: translateX(100%);
-  @apply border-white;
+  transform: translateX(1.25rem); /* 20px */
 }
 
 input:checked + .toggle-bg {
@@ -88,7 +86,7 @@ input:checked + .toggle-bg {
   }
 
   /* Hide colored backgrounds */
-  .bg-primary, .bg-accent, .bg-highlight, .bg-black\/20 {
+  [class*="bg-"] {
     background-color: transparent !important;
   }
 }

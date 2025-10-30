@@ -7,26 +7,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#0A2540', // Deep navy
+        background: '#000000',
+        surface: '#151516',
+        primary: '#F5F5F7', // Primary text
+        secondary: '#86868B', // Secondary text
         accent: {
-          DEFAULT: '#D4AF37', // Warm gold
-          soft: '#F5E9D0', // Beige
+          DEFAULT: '#2997FF',
+          hover: '#53ABFF',
         },
-        secondary: '#F8F6F1', // Soft sand
-        highlight: '#9BB8AD', // Muted teal/sage
+        border: '#2b2b2d',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
       },
       animation: {
-        'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
+        'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
       },
       keyframes: {
         'fade-in-up': {
           'from': {
             opacity: '0',
-            transform: 'translateY(20px)',
+            transform: 'translateY(10px)',
           },
           'to': {
             opacity: '1',

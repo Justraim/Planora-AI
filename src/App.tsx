@@ -131,11 +131,11 @@ const App: React.FC = () => {
 
     if (isLoading) {
       return (
-        <div className="max-w-4xl mx-auto bg-primary/50 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-2xl shadow-black/20 border border-accent/20">
+        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-border">
           <div className="text-center py-16">
             <LoadingSpinner />
-            <p className="mt-4 text-lg text-gray-300 transition-opacity duration-500">{loadingMessage}</p>
-            <p className="text-sm text-gray-400">This can take a moment.</p>
+            <p className="mt-4 text-lg text-secondary transition-opacity duration-500">{loadingMessage}</p>
+            <p className="text-sm text-secondary/70">This can take a moment.</p>
           </div>
         </div>
       );
@@ -143,12 +143,12 @@ const App: React.FC = () => {
 
     if (error) {
        return (
-        <div className="max-w-4xl mx-auto bg-primary/50 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-2xl shadow-black/20 border border-red-500/30">
+        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-red-500/40">
           <div className="text-center py-16">
             <p className="text-red-400 font-semibold">{error}</p>
             <button
               onClick={handleReset}
-              className="mt-6 bg-accent text-primary font-bold py-2 px-6 rounded-lg hover:bg-accent/90 transition-colors duration-300"
+              className="mt-6 bg-accent text-white font-bold py-2 px-6 rounded-lg hover:bg-accent-hover transition-colors duration-300"
             >
               Start Over
             </button>
@@ -159,7 +159,7 @@ const App: React.FC = () => {
 
     if (itinerary) {
       return (
-        <div className="max-w-4xl mx-auto bg-primary/50 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-2xl shadow-black/20 border border-accent/20">
+        <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl border border-border">
           <ItineraryDisplay 
             itinerary={itinerary}
             startDate={preferences.startDate}
@@ -182,13 +182,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary to-[#10345a] text-gray-200">
+    <div className="min-h-screen bg-background text-primary">
       <Header onLogoClick={handleStartOver} />
       <main className="container mx-auto px-4 py-8 md:py-12">
         {renderContent()}
-        <footer className="text-center mt-12 text-gray-400 text-sm no-print space-y-2">
+        <footer className="text-center mt-12 text-secondary text-sm no-print space-y-2">
           <p>&copy; {new Date().getFullYear()} Itinerae AI. All rights reserved.</p>
-          <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-accent-soft underline">Privacy Policy</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-primary underline">Privacy Policy</a>
         </footer>
       </main>
     </div>
