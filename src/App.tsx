@@ -190,7 +190,7 @@ const App: React.FC = () => {
         {renderContent()}
         <footer className="text-center mt-12 text-secondary text-sm no-print space-y-2">
           <p>&copy; {new Date().getFullYear()} Itinerae AI. All rights reserved.</p>
-          <a href="#" target="_blank" rel="noopener noreferrer" className="hover:text-primary underline">Privacy Policy</a>
+          <a href="#" onClick={(e) => e.preventDefault()} rel="noopener noreferrer" className="hover:text-primary underline">Privacy Policy</a>
         </footer>
       </main>
     </div>

@@ -73,20 +73,22 @@ const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: st
 const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
     <button
       onClick={onSelect}
-      className="relative text-left w-full h-80 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
+      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group flex flex-col"
     >
-      <div 
-          className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
-          style={{ backgroundImage: `url(${imageUrl})` }}
-      ></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-      <div className="absolute bottom-0 left-0 p-5 text-white w-full">
-         <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
+      <div className="relative h-48 w-full overflow-hidden">
+        <img 
+            src={imageUrl}
+            alt={title}
+            className="h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+        />
+      </div>
+      <div className="p-5 flex-grow flex flex-col">
+         <h3 className="text-lg font-bold text-primary">{title}</h3>
+         <p className="text-sm mt-1 text-secondary flex-grow">{description}</p>
+         <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/50">
+            <span className="text-xs font-semibold bg-gray-100 text-gray-800 px-2 py-1 rounded-full">{duration}</span>
             {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
         </div>
-        <h3 className="text-lg font-bold">{title}</h3>
-        <p className="text-sm mt-1 text-white/90">{description}</p>
       </div>
     </button>
   );
