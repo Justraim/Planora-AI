@@ -57,6 +57,15 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
       return purpose;
     })
     .join(', ');
+    
+  const topInterests = preferences.mostExcitedAbout
+    .map(interest => {
+      if (interest === 'Other' && preferences.otherExcitement) {
+        return `Other: ${preferences.otherExcitement}`;
+      }
+      return interest;
+    })
+    .join(', ');
 
   const prompt = `
     Create a personalized travel itinerary for ${preferences.name}.
@@ -82,7 +91,7 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
         - 'Maximize Every Moment': Schedule a full day with multiple activities from morning to night, minimizing downtime.
         - 'Explore and Unwind': A good balance of 2-3 main activities with some leisure time in between for relaxation or spontaneous discoveries.
         - 'Go with the Flow': Focus on 1-2 key activities per day with ample time for spontaneous exploration, relaxation, and unhurried experiences.
-    - **Top Interests:** ${preferences.mostExcitedAbout.join(', ')}
+    - **Top Interests:** ${topInterests}
     - **Specific Inclusions/Requests:** ${preferences.specificInclusions || 'None'}
 
     **CRITICAL Generation Instructions:**

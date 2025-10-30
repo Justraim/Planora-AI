@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import type { ItineraryPreferences } from '../types';
-import { ClockIcon } from './icons/ClockIcon';
-import { CurrencyDollarIcon } from './icons/CurrencyDollarIcon';
 
 interface Props {
   onStart: () => void;
@@ -22,7 +20,7 @@ const sampleItineraries: SampleItinerary[] = [
     title: "A Fairytale Weekend in Bruges",
     duration: "3 Days",
     budget: "Mid range",
-    description: "Wander through cobblestone streets, cruise along scenic canals, and indulge in Belgian chocolates.",
+    description: "Wander through cobblestone streets and cruise along scenic canals.",
     imageUrl: "https://images.unsplash.com/photo-1596701836640-153315287d63?q=80&w=2070&auto=format&fit=crop",
     preferences: {
       destination: "Bruges, Belgium",
@@ -37,7 +35,7 @@ const sampleItineraries: SampleItinerary[] = [
     title: "Cozy Autumn in The Cotswolds",
     duration: "4 Days",
     budget: "Mid range",
-    description: "Experience charming stone villages, rolling hills, and cozy pubs in the English countryside.",
+    description: "Charming stone villages, rolling hills, and cozy pubs.",
     imageUrl: "https://images.unsplash.com/photo-1600579979189-53e33c407a4a?q=80&w=1974&auto=format&fit=crop",
     preferences: {
         destination: "The Cotswolds, UK",
@@ -52,7 +50,7 @@ const sampleItineraries: SampleItinerary[] = [
     title: "Magical Northern Lights in Iceland",
     duration: "5 Days",
     budget: "Lux",
-    description: "Chase the Aurora Borealis, explore ice caves, and relax in geothermal lagoons.",
+    description: "Chase the Aurora Borealis and explore stunning ice caves.",
     imageUrl: "https://images.unsplash.com/photo-1534570122622-54d5e5b6a49e?q=80&w=1974&auto=format&fit=crop",
     preferences: {
         destination: "Reykjavik, Iceland",
@@ -65,30 +63,30 @@ const sampleItineraries: SampleItinerary[] = [
   },
 ];
 
+const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: string } = {
+  'Budget': 'bg-green-100 text-green-800',
+  'Mid range': 'bg-blue-100 text-blue-800',
+  'Lux': 'bg-purple-100 text-purple-800',
+  'Mix': 'bg-yellow-100 text-yellow-800',
+};
+
 const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
     <button
       onClick={onSelect}
-      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
+      className="relative text-left w-full h-80 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
     >
-      <div className="h-40 overflow-hidden">
-        <div 
-          className="h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
+      <div 
+          className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
           style={{ backgroundImage: `url(${imageUrl})` }}
-        ></div>
-      </div>
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-primary">{title}</h3>
-        <p className="text-sm mt-1 mb-4 text-secondary">{description}</p>
-        <div className="flex items-center text-xs font-medium gap-4 pt-3 border-t border-border text-secondary">
-          <div className="flex items-center gap-1.5">
-            <ClockIcon className="w-4 h-4" />
-            <span>{duration}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CurrencyDollarIcon className="w-4 h-4" />
-            <span>{budget}</span>
-          </div>
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 p-5 text-white w-full">
+         <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
+            {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
         </div>
+        <h3 className="text-lg font-bold">{title}</h3>
+        <p className="text-sm mt-1 text-white/90">{description}</p>
       </div>
     </button>
   );

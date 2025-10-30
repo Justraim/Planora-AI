@@ -13,7 +13,7 @@ interface Props {
 }
 
 const tripPurposeOptions: string[] = ['Holiday/Vacation', 'Family Trip', 'Adventure and Hiking', 'Romantic Getaway', 'Cultural Exploration', 'Business Trip', 'Other'];
-const excitementOptions = ["Restaurants and Food", "Cocktails and Nightlife", "Beaches and Scenic Views", "Wine Farms", "Art Galleries and Museums", "Local Markets and Shopping", "Nature and adventures"];
+const excitementOptions = ["Restaurants and Food", "Cocktails and Nightlife", "Beaches and Scenic Views", "Wine Farms", "Art Galleries and Museums", "Local Markets and Shopping", "Nature and adventures", "Other"];
 const budgetOptions: Exclude<ItineraryPreferences['budget'], ''>[] = ['Budget', 'Mid range', 'Lux', 'Mix'];
 const radiusOptions: Exclude<ItineraryPreferences['travelRadius'], ''>[] = ['City Center', 'Within 15km', 'Within 30km', 'No preference'];
 const pacingOptions: Exclude<ItineraryPreferences['pacing'], ''>[] = ['Maximize Every Moment', 'Explore and Unwind', 'Go with the Flow'];
@@ -53,19 +53,25 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
       if (field === 'tripPurpose') {
         updates.otherTripPurpose = newValues.includes('Other') ? prev.otherTripPurpose : '';
       }
+      
+      if (field === 'mostExcitedAbout') {
+        updates.otherExcitement = newValues.includes('Other') ? prev.otherExcitement : '';
+      }
 
       return { ...prev, ...updates };
     });
   };
 
   const handleSurpriseMe = () => {
-    const shuffled = [...excitementOptions].sort(() => 0.5 - Math.random());
+    const availableOptions = excitementOptions.filter(o => o !== 'Other');
+    const shuffled = [...availableOptions].sort(() => 0.5 - Math.random());
     const selectionCount = Math.floor(Math.random() * 3) + 2;
     const selectedOptions = shuffled.slice(0, selectionCount);
     
     setPreferences(prev => ({
       ...prev,
-      mostExcitedAbout: selectedOptions
+      mostExcitedAbout: selectedOptions,
+      otherExcitement: ''
     }));
   };
   
@@ -81,6 +87,21 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
   const handleOptionSelect = (name: keyof ItineraryPreferences, value: string) => {
     setPreferences(prev => ({ ...prev, [name]: value }));
   };
+
+  const isSubmitDisabled = isLoading || 
+    !preferences.name || 
+    !preferences.destination || 
+    !preferences.travelFrom || 
+    !preferences.startDate || 
+    !preferences.tripDuration || 
+    preferences.tripPurpose.length === 0 || 
+    (preferences.tripPurpose.includes('Other') && !preferences.otherTripPurpose) ||
+    !preferences.travelRadius || 
+    !preferences.firstTime || 
+    !preferences.budget || 
+    !preferences.pacing || 
+    preferences.mostExcitedAbout.length === 0 ||
+    (preferences.mostExcitedAbout.includes('Other') && !preferences.otherExcitement);
   
   return (
     <>
@@ -221,6 +242,20 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                       </ChipButton>
                   ))}
                 </div>
+                {preferences.mostExcitedAbout.includes('Other') && (
+                  <div className="mt-4 animate-fade-in-up">
+                    <label htmlFor="otherExcitement" className="block text-sm font-medium text-secondary mb-1">If other, please specify:</label>
+                    <input
+                      type="text"
+                      id="otherExcitement"
+                      name="otherExcitement"
+                      value={preferences.otherExcitement}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Photography spots"
+                      className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition text-primary"
+                    />
+                  </div>
+                )}
                  <div className="mt-4">
                     <button
                       type="button"
@@ -268,7 +303,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
           <div className="pt-4 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <button
               type="submit"
-              disabled={isLoading || !preferences.name || !preferences.destination || !preferences.travelFrom || !preferences.startDate || !preferences.tripDuration || preferences.tripPurpose.length === 0 || !preferences.travelRadius || !preferences.firstTime || !preferences.budget || !preferences.pacing || preferences.mostExcitedAbout.length === 0}
+              disabled={isSubmitDisabled}
               className="w-full flex items-center justify-center bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-accent-hover transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isLoading ? (

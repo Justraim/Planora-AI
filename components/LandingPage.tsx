@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import type { ItineraryPreferences } from '../types';
-import { ClockIcon } from './icons/ClockIcon';
-import { CurrencyDollarIcon } from './icons/CurrencyDollarIcon';
 
 interface Props {
   onStart: () => void;
@@ -19,60 +17,45 @@ interface SampleItinerary {
 
 const sampleItineraries: SampleItinerary[] = [
   {
-    title: "Cape Town",
-    duration: "8 Days",
+    title: "A Fairytale Weekend in Bruges",
+    duration: "3 Days",
     budget: "Mid range",
-    description: "Discover the beauty of Table Mountain and the rich history of South Africa's Mother City.",
-    imageUrl: "https://images.unsplash.com/photo-1576487248805-cf40f3c02882?q=80&w=2070&auto=format&fit=crop",
+    description: "Wander through cobblestone streets and cruise along scenic canals.",
+    imageUrl: "https://images.unsplash.com/photo-1596701836640-153315287d63?q=80&w=2070&auto=format&fit=crop",
     preferences: {
-      destination: "Cape Town, South Africa",
-      tripDuration: 8,
+      destination: "Bruges, Belgium",
+      tripDuration: 3,
       budget: "Mid range",
       pacing: "Explore and Unwind",
-      tripPurpose: ["Adventure and Hiking", "Cultural Exploration"],
-      mostExcitedAbout: ["Beaches and Scenic Views", "Nature and adventures", "Wine Farms"],
+      tripPurpose: ["Romantic Getaway", "Cultural Exploration"],
+      mostExcitedAbout: ["Local Markets and Shopping", "Restaurants and Food"],
     },
   },
   {
-    title: "Kyoto",
-    duration: "7 Days",
-    budget: "Mid range",
-    description: "Immerse yourself in ancient temples, serene gardens, and traditional arts in old Japan.",
-    imageUrl: "https://images.unsplash.com/photo-1536531015638-3c35b1599d8d?q=80&w=1974&auto=format&fit=crop",
-    preferences: {
-        destination: "Kyoto, Japan",
-        tripDuration: 7,
-        budget: "Mid range",
-        pacing: "Explore and Unwind",
-        tripPurpose: ["Cultural Exploration"],
-        mostExcitedAbout: ["Art Galleries and Museums", "Restaurants and Food", "Nature and adventures"],
-    },
-  },
-  {
-    title: "Paris",
+    title: "Cozy Autumn in The Cotswolds",
     duration: "4 Days",
-    budget: "Lux",
-    description: "Experience the magic of the City of Light with museums, charming cafés, and romantic strolls.",
-    imageUrl: "https://images.unsplash.com/photo-1502602898657-3e91760c0337?q=80&w=1974&auto=format&fit=crop",
+    budget: "Mid range",
+    description: "Charming stone villages, rolling hills, and cozy pubs.",
+    imageUrl: "https://images.unsplash.com/photo-1600579979189-53e33c407a4a?q=80&w=1974&auto=format&fit=crop",
     preferences: {
-        destination: "Paris, France",
+        destination: "The Cotswolds, UK",
         tripDuration: 4,
-        budget: "Lux",
-        pacing: "Maximize Every Moment",
-        tripPurpose: ["Romantic Getaway"],
-        mostExcitedAbout: ["Art Galleries and Museums", "Restaurants and Food", "Cocktails and Nightlife"],
+        budget: "Mid range",
+        pacing: "Go with the Flow",
+        tripPurpose: ["Holiday/Vacation"],
+        mostExcitedAbout: ["Nature and adventures", "Restaurants and Food"],
     },
   },
   {
-    title: "Costa Rica",
-    duration: "10 Days",
-    budget: "Budget",
-    description: "Explore lush rainforests, volcanic landscapes, and stunning coastlines for nature lovers.",
-    imageUrl: "https://images.unsplash.com/photo-1532598199736-54de93d395a1?q=80&w=2070&auto=format&fit=crop",
+    title: "Magical Northern Lights in Iceland",
+    duration: "5 Days",
+    budget: "Lux",
+    description: "Chase the Aurora Borealis and explore stunning ice caves.",
+    imageUrl: "https://images.unsplash.com/photo-1534570122622-54d5e5b6a49e?q=80&w=1974&auto=format&fit=crop",
     preferences: {
-        destination: "Costa Rica",
-        tripDuration: 10,
-        budget: "Budget",
+        destination: "Reykjavik, Iceland",
+        tripDuration: 5,
+        budget: "Lux",
         pacing: "Maximize Every Moment",
         tripPurpose: ["Adventure and Hiking"],
         mostExcitedAbout: ["Nature and adventures", "Beaches and Scenic Views"],
@@ -80,25 +63,30 @@ const sampleItineraries: SampleItinerary[] = [
   },
 ];
 
+const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: string } = {
+  'Budget': 'bg-green-100 text-green-800',
+  'Mid range': 'bg-blue-100 text-blue-800',
+  'Lux': 'bg-purple-100 text-purple-800',
+  'Mix': 'bg-yellow-100 text-yellow-800',
+};
+
 const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
     <button
       onClick={onSelect}
-      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-shadow duration-300 hover:shadow-lg group"
+      className="relative text-left w-full h-80 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
     >
-      <div className="h-40 bg-cover bg-center" style={{ backgroundImage: `url(${imageUrl})` }}></div>
-      <div className="p-5">
-        <h3 className="text-lg font-bold text-primary">{title}</h3>
-        <p className="text-sm mt-1 mb-4 text-secondary">{description}</p>
-        <div className="flex items-center text-xs font-medium gap-4 pt-3 border-t border-border text-secondary">
-          <div className="flex items-center gap-1.5">
-            <ClockIcon className="w-4 h-4" />
-            <span>{duration}</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <CurrencyDollarIcon className="w-4 h-4" />
-            <span>{budget}</span>
-          </div>
+      <div 
+          className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
+          style={{ backgroundImage: `url(${imageUrl})` }}
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 p-5 text-white w-full">
+         <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
+            {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
         </div>
+        <h3 className="text-lg font-bold">{title}</h3>
+        <p className="text-sm mt-1 text-white/90">{description}</p>
       </div>
     </button>
   );
@@ -108,6 +96,7 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
   const [displayedItineraries, setDisplayedItineraries] = useState<SampleItinerary[]>([]);
 
   useEffect(() => {
+    // Show a consistent set of 3 random itineraries on each load
     const shuffled = [...sampleItineraries].sort(() => 0.5 - Math.random());
     const randomThree = shuffled.slice(0, 3);
     setDisplayedItineraries(randomThree);

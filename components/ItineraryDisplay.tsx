@@ -10,6 +10,7 @@ import { PrinterIcon } from './icons/PrinterIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { InformationCircleIcon } from './icons/InformationCircleIcon';
+import { ArrowPathIcon } from './icons/ArrowPathIcon';
 
 interface Props {
   itinerary: ItineraryPlan;
@@ -27,6 +28,17 @@ const ActivityDetail: React.FC<{ icon: React.ReactNode; label: string; value: st
     </div>
   </div>
 );
+
+const ActionButton: React.FC<{ onClick: () => void; icon: React.ReactNode; children: React.ReactNode; className?: string }> = ({ onClick, icon, children, className = '' }) => (
+  <button
+    onClick={onClick}
+    className={`w-full sm:w-auto flex items-center justify-center bg-surface border border-border text-secondary font-semibold py-2 px-5 rounded-lg hover:bg-background hover:text-primary transition-colors duration-300 ${className}`}
+  >
+    {icon}
+    {children}
+  </button>
+);
+
 
 const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining }) => {
   const [refinementPrompt, setRefinementPrompt] = useState('');
@@ -125,10 +137,10 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
                 </div>
               )}
 
-              <div className="border-l-2 border-border ml-5 pl-10 py-2 space-y-6">
+              <div className="border-l-2 border-border/50 ml-5 pl-10 py-2 space-y-6">
                 {day.activities.map((activity, index) => (
                   <div key={index} className="relative">
-                    <div className="absolute -left-[29px] top-1.5 h-4 w-4 bg-surface border-2 border-accent rounded-full"></div>
+                    <div className="absolute -left-[30px] top-1.5 h-4 w-4 bg-surface border-2 border-accent rounded-full"></div>
                     <p className="font-semibold text-accent text-lg">{activity.time}</p>
                     <p className="text-primary font-bold text-lg">{activity.description}</p>
                     {activity.details && <p className="text-sm text-secondary italic mt-1 mb-3">{activity.details}</p>}
@@ -163,9 +175,15 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
 
       <div className="mt-12 pt-8 border-t border-border space-y-8 no-print">
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button onClick={handleShare} className="w-full sm:w-auto flex items-center justify-center bg-gray-200 text-primary font-bold py-2 px-5 rounded-lg hover:bg-gray-300 transition-colors duration-300"><ShareIcon className="h-5 w-5 mr-2"/>Share</button>
-          <button onClick={handlePrint} className="w-full sm:w-auto flex items-center justify-center bg-gray-200 text-primary font-bold py-2 px-5 rounded-lg hover:bg-gray-300 transition-colors duration-300"><PrinterIcon className="h-5 w-5 mr-2"/>Print</button>
-          <button onClick={onReset} className="w-full sm:w-auto border border-border text-primary font-bold py-2 px-5 rounded-lg hover:bg-background transition-colors duration-300">Create New Plan</button>
+            <ActionButton onClick={handleShare} icon={<ShareIcon className="h-5 w-5 mr-2"/>}>Share</ActionButton>
+            <ActionButton onClick={handlePrint} icon={<PrinterIcon className="h-5 w-5 mr-2"/>}>Print</ActionButton>
+            <ActionButton 
+                onClick={onReset} 
+                icon={<ArrowPathIcon className="h-5 w-5 mr-2"/>}
+                className="text-accent border-accent/50 hover:bg-accent/10"
+            >
+                Create New Plan
+            </ActionButton>
         </div>
 
         <div className="bg-background p-6 rounded-xl border border-border">

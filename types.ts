@@ -10,6 +10,7 @@ export interface ItineraryPreferences {
   tripPurpose: string[];
   otherTripPurpose?: string;
   mostExcitedAbout: string[];
+  otherExcitement?: string;
   specificInclusions?: string;
   budget: 'Budget' | 'Mid range' | 'Lux' | 'Mix' | '';
   pacing: 'Maximize Every Moment' | 'Explore and Unwind' | 'Go with the Flow' | '';
