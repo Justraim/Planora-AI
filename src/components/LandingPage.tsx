@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import type { ItineraryPreferences } from '../types';
-import { CityscapeIcon } from './icons/CityscapeIcon';
-import { MountainIcon } from './icons/MountainIcon';
 
 interface Props {
   onStart: () => void;
@@ -14,7 +12,7 @@ interface SampleItinerary {
   budget: ItineraryPreferences['budget'];
   description: string;
   preferences: Partial<ItineraryPreferences>;
-  icon: React.FC<React.SVGProps<SVGSVGElement>>;
+  imageUrl: string;
 }
 
 const sampleItineraries: SampleItinerary[] = [
@@ -23,7 +21,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "3 Days",
     budget: "Mid range",
     description: "Wander through cobblestone streets and cruise along scenic canals.",
-    icon: CityscapeIcon,
+    imageUrl: "https://images.unsplash.com/photo-1596701836640-153315287d63?q=80&w=2070&auto=format&fit=crop",
     preferences: {
       destination: "Bruges, Belgium",
       tripDuration: 3,
@@ -38,7 +36,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Mid range",
     description: "Charming stone villages, rolling hills, and cozy pubs.",
-    icon: CityscapeIcon,
+    imageUrl: "https://images.unsplash.com/photo-1600579979189-53e33c407a4a?q=80&w=1974&auto=format&fit=crop",
     preferences: {
         destination: "The Cotswolds, UK",
         tripDuration: 4,
@@ -53,7 +51,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Lux",
     description: "Chase the Aurora Borealis and explore stunning ice caves.",
-    icon: MountainIcon,
+    imageUrl: "https://images.unsplash.com/photo-1534570122622-54d5e5b6a49e?q=80&w=1974&auto=format&fit=crop",
     preferences: {
         destination: "Reykjavik, Iceland",
         tripDuration: 5,
@@ -72,21 +70,23 @@ const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: st
   'Mix': 'bg-yellow-100 text-yellow-800',
 };
 
-const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, icon: Icon }) => (
+const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
     <button
       onClick={onSelect}
-      className="text-left w-full rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group flex flex-col hover:-translate-y-1"
+      className="relative text-left w-full h-80 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
     >
-      <div className="relative h-48 w-full overflow-hidden bg-gray-100 flex items-center justify-center p-6">
-        <Icon className="w-24 h-24 text-gray-300 transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:text-accent" />
-      </div>
-      <div className="p-5 flex-grow flex flex-col">
-         <h3 className="text-lg font-bold text-primary">{title}</h3>
-         <p className="text-sm mt-1 text-secondary flex-grow">{description}</p>
-         <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border/50">
-            <span className="text-xs font-semibold bg-gray-100 text-gray-800 px-2 py-1 rounded-full">{duration}</span>
+      <div 
+          className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
+          style={{ backgroundImage: `url(${imageUrl})` }}
+      ></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      <div className="absolute bottom-0 left-0 p-5 text-white w-full">
+         <div className="flex items-center gap-2 mb-2">
+            <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
             {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
         </div>
+        <h3 className="text-lg font-bold">{title}</h3>
+        <p className="text-sm mt-1 text-white/90">{description}</p>
       </div>
     </button>
   );
