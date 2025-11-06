@@ -27,7 +27,7 @@ const excitementOptions = [
     "Other"
 ];
 const budgetOptions: Exclude<ItineraryPreferences['budget'], ''>[] = ['Budget', 'Mid range', 'Lux', 'Mix'];
-const radiusOptions: Exclude<ItineraryPreferences['travelRadius'], ''>[] = ['City Center', 'Within 15km', 'Within 30km', 'No preference'];
+const radiusOptions: Exclude<ItineraryPreferences['travelRadius'], ''>[] = ['City Centre', 'Within 15km', 'Within 30km', 'No preference'];
 const pacingOptions: Exclude<ItineraryPreferences['pacing'], ''>[] = ['Maximize Every Moment', 'Explore and Unwind', 'Go with the Flow'];
 
 const FormSection: React.FC<{ title: string, children: React.ReactNode, delay?: string }> = ({ title, children, delay = '0s' }) => (
@@ -119,7 +119,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
     <>
       <div className="text-center mb-12 animate-fade-in-up max-w-3xl mx-auto">
         <h2 className="text-5xl font-bold">Plan your adventure.</h2>
-        <p className="mt-4 text-lg text-secondary">Just share your travel preferences, and our AI will craft your perfect, personalized itinerary.</p>
+        <p className="mt-4 text-lg text-secondary">Just share your travel preferences, and our AI will craft your perfect, personalised itinerary.</p>
       </div>
       <div className="max-w-4xl mx-auto bg-surface p-6 md:p-10 rounded-2xl shadow-subtle border border-border">
         <form onSubmit={onSubmit} className="space-y-8">
@@ -154,7 +154,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                   type="text" id="travelFrom" name="travelFrom"
                   value={preferences.travelFrom}
                   onChange={handleInputChange}
-                  placeholder="e.g., California, USA"
+                  placeholder="e.g., London, UK"
                   required
                   className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition text-primary"
                 />
@@ -192,7 +192,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                  />
               </div>
               <div>
-                <label htmlFor="numberOfTravelers" className="block text-sm font-medium text-secondary mb-1">How many people are traveling?</label>
+                <label htmlFor="numberOfTravelers" className="block text-sm font-medium text-secondary mb-1">How many people are travelling?</label>
                 <NumberStepper
                     id="numberOfTravelers"
                     value={preferences.numberOfTravelers}

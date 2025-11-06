@@ -30,7 +30,7 @@ const itinerarySchema = {
                 time: { type: Type.STRING, description: "Suggested time for the activity (e.g., 'Morning', '9:00 AM', 'Afternoon', 'Evening')." },
                 description: { type: Type.STRING, description: "A concise description of the activity." },
                 details: { type: Type.STRING, description: "Optional: A brief sentence with extra detail about the experience." },
-                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Center'." },
+                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Centre'." },
                 tradingHours: { type: Type.STRING, description: "Operating hours, e.g., '9:00 AM - 5:00 PM' or '24/7'." },
                 estimatedCost: { type: Type.STRING, description: "Estimated cost per person. This MUST follow the currency conversion rules." },
                 tip: { type: Type.STRING, description: "A single, helpful tip for the activity, e.g., 'Book tickets online to avoid queues.'" },
@@ -122,20 +122,20 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     .join(', ');
 
   const prompt = `
-    Create a personalized travel itinerary for ${preferences.name}.
+    Create a personalised travel itinerary for ${preferences.name}.
     Act as an expert travel planner with a knack for creating memorable, practical, and well-structured trips.
 
     **Core Details:**
-    - **Traveling From:** ${preferences.travelFrom} (User's home country/city)
+    - **Travelling From:** ${preferences.travelFrom} (User's home country/city)
     - **Destination:** ${preferences.destination}
     - **Travel Radius:** ${preferences.travelRadius}. Interpret this as follows:
-        - 'City Center': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
-        - 'Within 15km': Include the city center and nearby suburbs or points of interest that are a short drive or train ride away.
+        - 'City Centre': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
+        - 'Within 15km': Include the city centre and nearby suburbs or points of interest that are a short drive or train ride away.
         - 'Within 30km': Allows for half-day or full-day trips to nearby towns, natural parks, or significant landmarks outside the main city.
         - 'No preference': You have the freedom to suggest the best combination of central and further-afield activities.
     - **Start Date:** ${preferences.startDate}
     - **Trip Duration:** ${preferences.tripDuration} days.
-    - **Number of Travelers:** ${preferences.numberOfTravelers}
+    - **Number of Travellers:** ${preferences.numberOfTravelers}
     - **First Time Visitor?:** ${preferences.firstTime}
     - **Purpose of Trip:** ${tripPurposes}
 
@@ -149,9 +149,9 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     - **Specific Inclusions/Requests:** ${preferences.specificInclusions || 'None'}
 
     **CRITICAL Generation Instructions:**
-    1.  **Smart Currency Conversion:** You MUST compare the 'Traveling From' location with the 'Destination'.
-        - If the trip is **international** (e.g., USA to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. $20 USD)".
-        - If the trip is **domestic** (e.g., USA to USA), just use the local currency. Example: "$25 USD".
+    1.  **Smart Currency Conversion:** You MUST compare the 'Travelling From' location with the 'Destination'.
+        - If the trip is **international** (e.g., UK to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. £15 GBP)".
+        - If the trip is **domestic** (e.g., UK to UK), just use the local currency. Example: "£20 GBP".
     2.  **Venue & Holiday Awareness (VERY IMPORTANT):**
         - **Check Operating Days:** Before suggesting an activity like a museum or gallery, verify its typical operating days. For example, many European museums are closed on Mondays. If a venue is likely to be closed on the planned day, DO NOT include it. Suggest a suitable alternative instead.
         - **Research Events & Holidays:** Check for any public holidays, major festivals, or significant events in the destination that coincide with the trip dates. If an event exists, add a concise \`note\` to that day's plan explaining the event and its potential impact (e.g., "Public Holiday: Expect many closures and parades."). If there are no events, omit the \`note\` field.

@@ -30,6 +30,21 @@ input:checked + .toggle-bg {
   @apply bg-accent border-accent;
 }
 
+/* Styles for Legal Pages Content */
+.legal-content h4 {
+  @apply text-lg font-bold mt-6 mb-2 text-primary;
+}
+.legal-content p, .legal-content li {
+  @apply mb-4 leading-relaxed;
+}
+.legal-content ul {
+  @apply list-disc list-inside space-y-2 pl-2;
+}
+.legal-content a {
+    @apply text-accent underline hover:text-accent-hover;
+}
+
+
 @media print {
   /* Hide non-essential elements */
   header, footer.no-print, .no-print {

@@ -42,15 +42,15 @@ const LandingPage: React.FC<Props> = ({ onStart }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center max-w-5xl mx-auto">
           <FeatureItem icon={<PaperAirplaneIcon />} title="1. Tell us your plans">Fill in quick preferences for your interests, dates, and travel style.</FeatureItem>
           <FeatureItem icon={<SparklesIcon />} title="2. AI crafts your journey">Our smart planner curates activities, routes, and dining options instantly.</FeatureItem>
-          <FeatureItem icon={<PrinterIcon />} title="3. Download or customize">Get a ready-to-go itinerary or tweak it anytime to make it perfect.</FeatureItem>
+          <FeatureItem icon={<PrinterIcon />} title="3. Download or customise">Get a ready-to-go itinerary or tweak it anytime to make it perfect.</FeatureItem>
         </div>
       </div>
       
       <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-         <h2 className="text-3xl font-bold text-center mb-12">Why Travelers Choose Itinerae</h2>
+         <h2 className="text-3xl font-bold text-center mb-12">Why Travellers Choose Itinerae</h2>
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             <FeatureItem icon={<ClockIcon />} title="Instant Planning">Get a full itinerary in seconds, not hours.</FeatureItem>
-            <FeatureItem icon={<LightBulbIcon />} title="Smarter with Every Trip">Powered by advanced AI and real traveler data.</FeatureItem>
+            <FeatureItem icon={<LightBulbIcon />} title="Smarter with Every Trip">Powered by advanced AI and real traveller data.</FeatureItem>
             <FeatureItem icon={<CalendarIcon />} title="Effortless Bookings">Reserve experiences directly from your itinerary.</FeatureItem>
             <FeatureItem icon={<MapPinIcon />} title="Made for You">Every journey is tailored to your unique travel style.</FeatureItem>
          </div>
