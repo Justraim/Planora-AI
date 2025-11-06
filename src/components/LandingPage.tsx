@@ -1,5 +1,4 @@
 import React from 'react';
-import type { ItineraryPreferences } from '../types';
 import { PaperAirplaneIcon } from './icons/PaperAirplaneIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
 import { PrinterIcon } from './icons/PrinterIcon';
