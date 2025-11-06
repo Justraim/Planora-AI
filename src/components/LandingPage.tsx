@@ -24,6 +24,36 @@ interface SampleItinerary {
 
 const sampleItineraries: SampleItinerary[] = [
   {
+    title: "Vibrant City Life in Cape Town",
+    duration: "5 Days",
+    budget: "Mix",
+    description: "From Table Mountain to the V&A Waterfront, experience the best of the Mother City.",
+    imageUrl: "https://images.unsplash.com/photo-1576487248805-cf40f448237d?q=80&w=800&auto=format&fit=crop",
+    preferences: {
+      destination: "Cape Town, South Africa",
+      tripDuration: 5,
+      budget: "Mix",
+      pacing: "Explore and Unwind",
+      tripPurpose: ["Holiday/Vacation", "Nature and Outdoor Adventures"],
+      mostExcitedAbout: ["Beaches and Scenic Views", "Restaurants and Food", "Wine Farms and Vineyards"],
+    },
+  },
+  {
+    title: "Urban Energy in Johannesburg",
+    duration: "4 Days",
+    budget: "Mid range",
+    description: "Explore the historic heart of South Africa's largest city and its vibrant culture.",
+    imageUrl: "https://images.unsplash.com/photo-1628009890710-4664a7536a4a?q=80&w=800&auto=format&fit=crop",
+    preferences: {
+      destination: "Johannesburg, South Africa",
+      tripDuration: 4,
+      budget: "Mid range",
+      pacing: "Maximize Every Moment",
+      tripPurpose: ["Cultural Exploration"],
+      mostExcitedAbout: ["Art Galleries and Museums", "History and Culture", "Local Markets and Shopping"],
+    },
+  },
+  {
     title: "The Ultimate London Experience",
     duration: "4 Days",
     budget: "Mid range",
@@ -68,16 +98,37 @@ const sampleItineraries: SampleItinerary[] = [
         mostExcitedAbout: ["Beaches and Scenic Views", "Nature and Outdoor Adventures", "Hidden Gems and Unique Experiences"],
     },
   },
+  {
+    title: "Spanish Charm in Madrid",
+    duration: "4 Days",
+    budget: "Budget",
+    description: "Experience vibrant plazas, world-class art, and delicious tapas.",
+    imageUrl: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?q=80&w=800&auto=format&fit=crop",
+    preferences: {
+      destination: "Madrid, Spain",
+      tripDuration: 4,
+      budget: "Budget",
+      pacing: "Explore and Unwind",
+      tripPurpose: ["Cultural Exploration"],
+      mostExcitedAbout: ["Restaurants and Food", "Art Galleries and Museums", "Cocktails and Nightlife"],
+    },
+  },
+  {
+    title: "Tropical Paradise in Zanzibar",
+    duration: "6 Days",
+    budget: "Mid range",
+    description: "White sand beaches, turquoise waters, and a rich history in Stone Town.",
+    imageUrl: "https://images.unsplash.com/photo-1577782472832-65f3f01bdf85?q=80&w=800&auto=format&fit=crop",
+    preferences: {
+      destination: "Zanzibar, Tanzania",
+      tripDuration: 6,
+      budget: "Mid range",
+      pacing: "Go with the Flow",
+      tripPurpose: ["Romantic Getaway", "Holiday/Vacation"],
+      mostExcitedAbout: ["Beaches and Scenic Views", "History and Culture", "Hidden Gems and Unique Experiences"],
+    },
+  }
 ];
-
-const featuredDestinations = [
-    { name: 'Cape Town', imageUrl: 'https://images.unsplash.com/photo-1576487248805-cf40f448237d?q=80&w=800&auto=format&fit=crop', preferences: { destination: 'Cape Town, South Africa' } },
-    { name: 'Johannesburg', imageUrl: 'https://images.unsplash.com/photo-1628009890710-4664a7536a4a?q=80&w=800&auto=format&fit=crop', preferences: { destination: 'Johannesburg, South Africa' } },
-    { name: 'Madrid', imageUrl: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?q=80&w=800&auto=format&fit=crop', preferences: { destination: 'Madrid, Spain' } },
-    { name: 'Zanzibar', imageUrl: 'https://images.unsplash.com/photo-1577782472832-65f3f01bdf85?q=80&w=800&auto=format&fit=crop', preferences: { destination: 'Zanzibar, Tanzania' } },
-    { name: 'Lisbon', imageUrl: 'https://images.unsplash.com/photo-1588690152936-39a7a6345dea?q=80&w=800&auto=format&fit=crop', preferences: { destination: 'Lisbon, Portugal' } },
-];
-
 
 const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: string } = {
   'Budget': 'bg-green-100 text-green-800',
@@ -117,29 +168,24 @@ const FeatureItem: React.FC<{ icon: React.ReactNode; title: string; children: Re
     </div>
 );
 
-const DestinationTile: React.FC<{ name: string; imageUrl: string; onSelect: () => void }> = ({ name, imageUrl, onSelect }) => (
-    <button
-        onClick={onSelect}
-        className="relative text-left w-full h-48 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
-    >
-        <div 
-            className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
-            style={{ backgroundImage: `url(${imageUrl})` }}
-        ></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 p-4 text-white w-full">
-            <h3 className="text-lg font-bold">{name}</h3>
-        </div>
-    </button>
-);
-
 const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
   const [displayedItineraries, setDisplayedItineraries] = useState<SampleItinerary[]>([]);
 
   useEffect(() => {
-    const shuffled = [...sampleItineraries].sort(() => 0.5 - Math.random());
-    const randomThree = shuffled.slice(0, 3);
-    setDisplayedItineraries(randomThree);
+    const saItineraries = sampleItineraries.filter(it => it.preferences.destination?.includes('South Africa'));
+    const otherItineraries = sampleItineraries.filter(it => !it.preferences.destination?.includes('South Africa'));
+    
+    // 1. Pick one from SA
+    const mandatoryItinerary = saItineraries[Math.floor(Math.random() * saItineraries.length)];
+    
+    // 2. Shuffle others and pick two
+    const shuffledOthers = [...otherItineraries].sort(() => 0.5 - Math.random());
+    const otherTwo = shuffledOthers.slice(0, 2);
+    
+    // 3. Combine and shuffle the final three to randomize their display order
+    const finalThree = [mandatoryItinerary, ...otherTwo].sort(() => 0.5 - Math.random());
+    
+    setDisplayedItineraries(finalThree);
   }, []);
 
   return (
@@ -187,19 +233,6 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
             <FeatureItem icon={<CalendarIcon />} title="Effortless Bookings">Reserve experiences directly from your itinerary.</FeatureItem>
             <FeatureItem icon={<MapPinIcon />} title="Made for You">Every journey is tailored to your unique travel style.</FeatureItem>
          </div>
-      </div>
-
-      <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
-        <h2 className="text-3xl font-bold text-center mb-8">Where Will You Go Next?</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {featuredDestinations.map((dest) => (
-            <DestinationTile 
-              key={dest.name}
-              {...dest}
-              onSelect={() => onSampleSelect(dest.preferences)}
-            />
-          ))}
-        </div>
       </div>
 
       <div className="text-center py-12 md:py-16 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
