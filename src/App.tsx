@@ -6,6 +6,7 @@ import ItineraryForm from './components/ItineraryForm';
 import ItineraryDisplay from './components/ItineraryDisplay';
 import LoadingSpinner from './components/LoadingSpinner';
 import LandingPage from './components/LandingPage';
+import AboutPage from './components/AboutPage';
 
 const loadingMessages = [
   "Crafting your personalized adventure...",
@@ -14,6 +15,8 @@ const loadingMessages = [
   "Consulting our virtual globetrotter...",
   "Packing your virtual bags..."
 ];
+
+type Page = 'landing' | 'app' | 'about';
 
 const App: React.FC = () => {
   const [preferences, setPreferences] = useState<ItineraryPreferences>({
@@ -38,7 +41,7 @@ const App: React.FC = () => {
   const [isRefining, setIsRefining] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
-  const [formVisible, setFormVisible] = useState(false);
+  const [page, setPage] = useState<Page>('landing');
 
   useEffect(() => {
     let interval: number;
@@ -90,7 +93,6 @@ const App: React.FC = () => {
   const handleReset = () => {
     setItinerary(null);
     setError(null);
-    setFormVisible(true); // Go back to the form, not the landing page
     setPreferences({
       name: '',
       destination: '',
@@ -112,7 +114,7 @@ const App: React.FC = () => {
 
   const handleStartOver = () => {
     handleReset();
-    setFormVisible(false); // Go all the way back to the landing page
+    setPage('landing'); // Go all the way back to the landing page
   }
   
   const handleSampleSelect = (samplePrefs: Partial<ItineraryPreferences>) => {
@@ -122,13 +124,17 @@ const App: React.FC = () => {
       name: prev.name, // Keep the user's name if they've already entered it
       travelFrom: prev.travelFrom, // Keep user's travel from location
     }));
-    setFormVisible(true);
+    setPage('app');
   };
 
 
   const renderContent = () => {
-    if (!formVisible) {
-      return <LandingPage onStart={() => setFormVisible(true)} onSampleSelect={handleSampleSelect} />;
+    if (page === 'landing') {
+      return <LandingPage onStart={() => setPage('app')} onSampleSelect={handleSampleSelect} />;
+    }
+
+    if (page === 'about') {
+        return <AboutPage onBack={() => setPage('landing')} />;
     }
 
     if (isLoading) {
@@ -152,7 +158,7 @@ const App: React.FC = () => {
               onClick={handleReset}
               className="mt-6 bg-accent text-white font-bold py-2 px-6 rounded-lg hover:bg-accent-hover transition-colors duration-300"
             >
-              Start Over
+              Try Again
             </button>
           </div>
         </div>
@@ -190,7 +196,7 @@ const App: React.FC = () => {
         {renderContent()}
         <footer className="text-center mt-12 text-secondary text-sm no-print space-y-4">
             <div className="flex justify-center items-center gap-x-6 gap-y-2 flex-wrap">
-                <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">About Itinerae</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); setPage('about'); }} className="hover:text-primary">About Itinerae</a>
                 <a href="mailto:Info@Itinerae.co.za" className="hover:text-primary">Info@Itinerae.co.za</a>
                 <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Terms of Service</a>
                 <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Privacy Policy</a>
