@@ -28,7 +28,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Mix",
     description: "From Table Mountain to the V&A Waterfront, experience the best of the Mother City.",
-    imageUrl: "https://images.unsplash.com/photo-1576487248805-cf40f448237d?q=80&w=1280&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1629023371830-4161b9f9392b?q=80&w=1974&auto=format&fit=crop",
     preferences: {
       destination: "Cape Town, South Africa",
       tripDuration: 5,
