@@ -29,7 +29,7 @@ const NumberStepper: React.FC<Props> = ({ id, value, onChange, min = 1, max }) =
         type="button"
         onClick={handleDecrement}
         disabled={value <= min}
-        className="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-full bg-gray-200 text-secondary hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Decrement"
       >
         <MinusIcon className="w-4 h-4" />
@@ -40,14 +40,14 @@ const NumberStepper: React.FC<Props> = ({ id, value, onChange, min = 1, max }) =
         name={id}
         value={value}
         readOnly // Make input read-only as changes are handled by buttons
-        className="w-full text-center px-2 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+        className="w-full text-center px-2 py-2 bg-background border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition text-primary"
         aria-live="polite"
       />
       <button
         type="button"
         onClick={handleIncrement}
         disabled={max !== undefined && value >= max}
-        className="p-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="p-2 rounded-full bg-gray-200 text-secondary hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         aria-label="Increment"
       >
         <PlusIcon className="w-4 h-4" />

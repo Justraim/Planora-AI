@@ -30,7 +30,7 @@ const itinerarySchema = {
                 time: { type: Type.STRING, description: "Suggested time for the activity (e.g., 'Morning', '9:00 AM', 'Afternoon', 'Evening')." },
                 description: { type: Type.STRING, description: "A concise description of the activity." },
                 details: { type: Type.STRING, description: "Optional: A brief sentence with extra detail about the experience." },
-                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Center'." },
+                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Centre'." },
                 tradingHours: { type: Type.STRING, description: "Operating hours, e.g., '9:00 AM - 5:00 PM' or '24/7'." },
                 estimatedCost: { type: Type.STRING, description: "Estimated cost per person. This MUST follow the currency conversion rules." },
                 tip: { type: Type.STRING, description: "A single, helpful tip for the activity, e.g., 'Book tickets online to avoid queues.'" },
@@ -43,6 +43,60 @@ const itinerarySchema = {
         required: ['day', 'title', 'theme', 'activities'],
       },
     },
+    alternativeSuggestions: {
+      type: Type.OBJECT,
+      description: "A list of alternative suggestions for activities and places that were not included in the main itinerary but are highly recommended.",
+      properties: {
+        topRestaurants: {
+          type: Type.ARRAY,
+          description: "A list of 3-5 top restaurants not included in the itinerary.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the restaurant." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description of the restaurant (e.g., cuisine, specialty, ambiance)." }
+            },
+            required: ['name', 'description']
+          }
+        },
+        topExperiences: {
+          type: Type.ARRAY,
+          description: "A list of 3-5 top experiences or attractions not included in the itinerary.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the experience." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description of the experience." }
+            },
+            required: ['name', 'description']
+          }
+        },
+        topBeaches: {
+          type: Type.ARRAY,
+          description: "If the destination is coastal, provide a list of 3-5 top beaches. If not applicable, return an empty array.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the beach." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description of the beach." }
+            },
+            required: ['name', 'description']
+          }
+        },
+        otherIdeas: {
+          type: Type.ARRAY,
+          description: "A list of 2-3 other interesting ideas, like a unique shop, a scenic walk, or a local market.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the idea/place." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description." }
+            },
+            required: ['name', 'description']
+          }
+        }
+      }
+    }
   },
   required: ['tripTitle', 'destination', 'duration', 'summary', 'weather', 'dailyPlan'],
 };
@@ -57,22 +111,31 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
       return purpose;
     })
     .join(', ');
+    
+  const topInterests = preferences.mostExcitedAbout
+    .map(interest => {
+      if (interest === 'Other' && preferences.otherExcitement) {
+        return `Other: ${preferences.otherExcitement}`;
+      }
+      return interest;
+    })
+    .join(', ');
 
   const prompt = `
-    Create a personalized travel itinerary for ${preferences.name}.
+    Create a personalised travel itinerary for ${preferences.name}.
     Act as an expert travel planner with a knack for creating memorable, practical, and well-structured trips.
 
     **Core Details:**
-    - **Traveling From:** ${preferences.travelFrom} (User's home country/city)
+    - **Travelling From:** ${preferences.travelFrom} (User's home country/city)
     - **Destination:** ${preferences.destination}
     - **Travel Radius:** ${preferences.travelRadius}. Interpret this as follows:
-        - 'City Center': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
-        - 'Within 15km': Include the city center and nearby suburbs or points of interest that are a short drive or train ride away.
+        - 'City Centre': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
+        - 'Within 15km': Include the city centre and nearby suburbs or points of interest that are a short drive or train ride away.
         - 'Within 30km': Allows for half-day or full-day trips to nearby towns, natural parks, or significant landmarks outside the main city.
         - 'No preference': You have the freedom to suggest the best combination of central and further-afield activities.
     - **Start Date:** ${preferences.startDate}
     - **Trip Duration:** ${preferences.tripDuration} days.
-    - **Number of Travelers:** ${preferences.numberOfTravelers}
+    - **Number of Travellers:** ${preferences.numberOfTravelers}
     - **First Time Visitor?:** ${preferences.firstTime}
     - **Purpose of Trip:** ${tripPurposes}
 
@@ -82,13 +145,13 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
         - 'Maximize Every Moment': Schedule a full day with multiple activities from morning to night, minimizing downtime.
         - 'Explore and Unwind': A good balance of 2-3 main activities with some leisure time in between for relaxation or spontaneous discoveries.
         - 'Go with the Flow': Focus on 1-2 key activities per day with ample time for spontaneous exploration, relaxation, and unhurried experiences.
-    - **Top Interests:** ${preferences.mostExcitedAbout.join(', ')}
+    - **Top Interests:** ${topInterests}
     - **Specific Inclusions/Requests:** ${preferences.specificInclusions || 'None'}
 
     **CRITICAL Generation Instructions:**
-    1.  **Smart Currency Conversion:** You MUST compare the 'Traveling From' location with the 'Destination'.
-        - If the trip is **international** (e.g., USA to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. $20 USD)".
-        - If the trip is **domestic** (e.g., USA to USA), just use the local currency. Example: "$25 USD".
+    1.  **Smart Currency Conversion:** You MUST compare the 'Travelling From' location with the 'Destination'.
+        - If the trip is **international** (e.g., UK to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. £15 GBP)".
+        - If the trip is **domestic** (e.g., UK to UK), just use the local currency. Example: "£20 GBP".
     2.  **Venue & Holiday Awareness (VERY IMPORTANT):**
         - **Check Operating Days:** Before suggesting an activity like a museum or gallery, verify its typical operating days. For example, many European museums are closed on Mondays. If a venue is likely to be closed on the planned day, DO NOT include it. Suggest a suitable alternative instead.
         - **Research Events & Holidays:** Check for any public holidays, major festivals, or significant events in the destination that coincide with the trip dates. If an event exists, add a concise \`note\` to that day's plan explaining the event and its potential impact (e.g., "Public Holiday: Expect many closures and parades."). If there are no events, omit the \`note\` field.
@@ -97,6 +160,13 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     5.  The output must follow the provided JSON schema precisely.
     6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
     7.  Address the user by their name, ${preferences.name}, in the summary.
+    8.  **Provide Alternative Suggestions:** After creating the daily plan, add an optional section called \`alternativeSuggestions\`. This section should list top-rated places that didn't fit into the main itinerary but are worth considering.
+        -   Include 3-5 \`topRestaurants\`.
+        -   Include 3-5 \`topExperiences\` (e.g., museums, tours, viewpoints).
+        -   If the destination is coastal, include 3-5 \`topBeaches\`. If not, this MUST be an empty array.
+        -   Include 2-3 \`otherIdeas\` (e.g., unique shops, parks, local markets).
+        -   For each item, provide a \`name\` and a brief \`description\`.
+        -   If no suitable suggestions can be found for a category, return an empty array for it.
   `;
 
   try {
@@ -147,6 +217,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, and reliable reservation links if you add new activities.
     4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
+    6.  **Maintain Alternative Suggestions:** Ensure the \`alternativeSuggestions\` section is preserved in the final output. If the user's request involves one of the suggestions (e.g., "replace the museum with that alternative restaurant you suggested"), update both the daily plan and the suggestions list accordingly. If the user's request is unrelated to the suggestions, return the original \`alternativeSuggestions\` object unmodified.
   `;
 
   try {
