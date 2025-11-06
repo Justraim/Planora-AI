@@ -28,7 +28,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Mix",
     description: "From Table Mountain to the V&A Waterfront, experience the best of the Mother City.",
-    imageUrl: "https://images.unsplash.com/photo-1576485299334-421c9a2a7a27?q=80&w=1974&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1576485299334-421c9a2a7a27?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80",
     preferences: {
       destination: "Cape Town, South Africa",
       tripDuration: 5,
@@ -43,7 +43,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Mid range",
     description: "Explore the historic heart of South Africa's largest city and its vibrant culture.",
-    imageUrl: "https://images.unsplash.com/photo-1622303038480-205167a6a40a?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1622303038480-205167a6a40a?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     preferences: {
       destination: "Johannesburg, South Africa",
       tripDuration: 4,
@@ -58,7 +58,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Budget",
     description: "Golden beaches, warm Indian Ocean waters, and a vibrant multicultural vibe.",
-    imageUrl: "https://images.unsplash.com/photo-1594924842426-99313d420556?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1594924842426-99313d420556?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     preferences: {
       destination: "Durban, South Africa",
       tripDuration: 4,
@@ -73,7 +73,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "3 Days",
     budget: "Budget",
     description: "Discover the imperial city with its historic kasbahs and royal landmarks.",
-    imageUrl: "https://images.unsplash.com/photo-1590123537827-21a42e032543?q=80&w=1964&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1590123537827-21a42e032543?ixlib=rb-4.0.3&auto=format&fit=crop&w=1964&q=80",
     preferences: {
         destination: "Rabat, Morocco",
         tripDuration: 3,
@@ -88,7 +88,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "7 Days",
     budget: "Mix",
     description: "Lush rice terraces, ancient temples, and stunning cliffside views await.",
-    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df97525p?q=80&w=1935&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df97525p?ixlib=rb-4.0.3&auto=format&fit=crop&w=1935&q=80",
     preferences: {
         destination: "Bali, Indonesia",
         tripDuration: 7,
@@ -103,7 +103,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "6 Days",
     budget: "Mid range",
     description: "Neon-lit skyscrapers, tranquil temples, and world-class cuisine.",
-    imageUrl: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     preferences: {
       destination: "Tokyo, Japan",
       tripDuration: 6,
@@ -118,7 +118,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "6 Days",
     budget: "Mid range",
     description: "White sand beaches, turquoise waters, and a rich history in Stone Town.",
-    imageUrl: "https://images.unsplash.com/photo-1603723321966-530dd71a10c2?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1603723321966-530dd71a10c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
     preferences: {
       destination: "Zanzibar, Tanzania",
       tripDuration: 6,
