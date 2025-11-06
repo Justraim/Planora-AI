@@ -28,7 +28,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Mix",
     description: "From Table Mountain to the V&A Waterfront, experience the best of the Mother City.",
-    imageUrl: "https://images.unsplash.com/photo-1576487248805-cf40f448237d?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1576487248805-cf40f448237d?q=80&w=1280&auto=format&fit=crop",
     preferences: {
       destination: "Cape Town, South Africa",
       tripDuration: 5,
@@ -43,7 +43,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Mid range",
     description: "Explore the historic heart of South Africa's largest city and its vibrant culture.",
-    imageUrl: "https://images.unsplash.com/photo-1628009890710-4664a7536a4a?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1628009890710-4664a7536a4a?q=80&w=1280&auto=format&fit=crop",
     preferences: {
       destination: "Johannesburg, South Africa",
       tripDuration: 4,
@@ -58,7 +58,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Mid range",
     description: "From historic landmarks to modern marvels, explore the best of London.",
-    imageUrl: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?q=80&w=1280&auto=format&fit=crop",
     preferences: {
       destination: "London, UK",
       tripDuration: 4,
@@ -73,7 +73,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Lux",
     description: "Discover iconic sights and hidden gems in the city that never sleeps.",
-    imageUrl: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?q=80&w=1280&auto=format&fit=crop",
     preferences: {
         destination: "New York, USA",
         tripDuration: 5,
@@ -88,7 +88,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "7 Days",
     budget: "Mix",
     description: "Lush rice terraces, ancient temples, and stunning cliffside views await.",
-    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df97525d?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1537996194471-e657df97525d?q=80&w=1280&auto=format&fit=crop",
     preferences: {
         destination: "Bali, Indonesia",
         tripDuration: 7,
@@ -103,7 +103,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Budget",
     description: "Experience vibrant plazas, world-class art, and delicious tapas.",
-    imageUrl: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1539037116277-4db20889f2d4?q=80&w=1280&auto=format&fit=crop",
     preferences: {
       destination: "Madrid, Spain",
       tripDuration: 4,
@@ -118,7 +118,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "6 Days",
     budget: "Mid range",
     description: "White sand beaches, turquoise waters, and a rich history in Stone Town.",
-    imageUrl: "https://images.unsplash.com/photo-1577782472832-65f3f01bdf85?q=80&w=800&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1577782472832-65f3f01bdf85?q=80&w=1280&auto=format&fit=crop",
     preferences: {
       destination: "Zanzibar, Tanzania",
       tripDuration: 6,
@@ -146,14 +146,14 @@ const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ titl
           className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
           style={{ backgroundImage: `url(${imageUrl})` }}
       ></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent"></div>
       <div className="absolute bottom-0 left-0 p-5 text-white w-full">
          <div className="flex items-center gap-2 mb-2">
             <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
             {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
         </div>
         <h3 className="text-lg font-bold">{title}</h3>
-        <p className="text-sm mt-1 text-white/90">{description}</p>
+        <p className="text-sm mt-1 text-white">{description}</p>
       </div>
     </button>
 );
