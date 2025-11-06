@@ -28,7 +28,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "3 Days",
     budget: "Mid range",
     description: "Wander through cobblestone streets and cruise along scenic canals.",
-    imageUrl: "https://images.unsplash.com/photo-1596701836640-153315287d63?q=80&w=2070&auto=format&fit=crop",
+    imageUrl: "https://source.unsplash.com/800x600/?Bruges,Belgium,canal",
     preferences: {
       destination: "Bruges, Belgium",
       tripDuration: 3,
@@ -43,7 +43,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "4 Days",
     budget: "Mid range",
     description: "Charming stone villages, rolling hills, and cozy pubs.",
-    imageUrl: "https://images.unsplash.com/photo-1600579979189-53e33c407a4a?q=80&w=1974&auto=format&fit=crop",
+    imageUrl: "https://source.unsplash.com/800x600/?Cotswolds,UK,village",
     preferences: {
         destination: "The Cotswolds, UK",
         tripDuration: 4,
@@ -58,7 +58,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Lux",
     description: "Chase the Aurora Borealis and explore stunning ice caves.",
-    imageUrl: "https://images.unsplash.com/photo-1534570122622-54d5e5b6a49e?q=80&w=1974&auto=format&fit=crop",
+    imageUrl: "https://source.unsplash.com/800x600/?Iceland,aurora,northern-lights",
     preferences: {
         destination: "Reykjavik, Iceland",
         tripDuration: 5,
@@ -71,11 +71,11 @@ const sampleItineraries: SampleItinerary[] = [
 ];
 
 const featuredDestinations = [
-    { name: 'Cape Town', imageUrl: 'https://images.unsplash.com/photo-1576487248805-cf40f3c0598ce?q=80&w=1974&auto=format&fit=crop', preferences: { destination: 'Cape Town, South Africa' } },
-    { name: 'Tokyo', imageUrl: 'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?q=80&w=2072&auto=format&fit=crop', preferences: { destination: 'Tokyo, Japan' } },
-    { name: 'Lisbon', imageUrl: 'https://images.unsplash.com/photo-1588691509173-363f81e74f8b?q=80&w=1974&auto=format&fit=crop', preferences: { destination: 'Lisbon, Portugal' } },
-    { name: 'Zanzibar', imageUrl: 'https://images.unsplash.com/photo-1600722230949-93e736733224?q=80&w=2070&auto=format&fit=crop', preferences: { destination: 'Zanzibar, Tanzania' } },
-    { name: 'Bali', imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1938&auto=format&fit=crop', preferences: { destination: 'Bali, Indonesia' } },
+    { name: 'Cape Town', imageUrl: 'https://source.unsplash.com/800x600/?Cape-Town,Table-Mountain', preferences: { destination: 'Cape Town, South Africa' } },
+    { name: 'Tokyo', imageUrl: 'https://source.unsplash.com/800x600/?Tokyo,cityscape', preferences: { destination: 'Tokyo, Japan' } },
+    { name: 'Lisbon', imageUrl: 'https://source.unsplash.com/800x600/?Lisbon,Portugal,tram', preferences: { destination: 'Lisbon, Portugal' } },
+    { name: 'Zanzibar', imageUrl: 'https://source.unsplash.com/800x600/?Zanzibar,beach', preferences: { destination: 'Zanzibar, Tanzania' } },
+    { name: 'Bali', imageUrl: 'https://source.unsplash.com/800x600/?Bali,temple', preferences: { destination: 'Bali, Indonesia' } },
 ];
 
 
