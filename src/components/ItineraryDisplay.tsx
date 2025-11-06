@@ -115,7 +115,6 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
     }
   };
 
-  // FIX: Added Array.isArray type guard to fix "Property 'length' does not exist on type 'unknown'" error.
   const hasSuggestions = itinerary.alternativeSuggestions && (Object.values(itinerary.alternativeSuggestions).some(arr => Array.isArray(arr) && arr.length > 0));
 
   return (

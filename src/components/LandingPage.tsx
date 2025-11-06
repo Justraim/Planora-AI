@@ -50,7 +50,7 @@ const sampleItineraries: SampleItinerary[] = [
         budget: "Mid range",
         pacing: "Go with the Flow",
         tripPurpose: ["Holiday/Vacation"],
-        mostExcitedAbout: ["Nature and adventures", "Restaurants and Food"],
+        mostExcitedAbout: ["Nature and Outdoor Adventures", "Restaurants and Food"],
     },
   },
   {
@@ -65,7 +65,7 @@ const sampleItineraries: SampleItinerary[] = [
         budget: "Lux",
         pacing: "Maximize Every Moment",
         tripPurpose: ["Adventure and Hiking"],
-        mostExcitedAbout: ["Nature and adventures", "Beaches and Scenic Views"],
+        mostExcitedAbout: ["Nature and Outdoor Adventures", "Beaches and Scenic Views"],
     },
   },
 ];

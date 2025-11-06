@@ -13,7 +13,19 @@ interface Props {
 }
 
 const tripPurposeOptions: string[] = ['Holiday/Vacation', 'Family Trip', 'Adventure and Hiking', 'Romantic Getaway', 'Cultural Exploration', 'Business Trip', 'Other'];
-const excitementOptions = ["Restaurants and Food", "Cocktails and Nightlife", "Beaches and Scenic Views", "Wine Farms", "Art Galleries and Museums", "Local Markets and Shopping", "Nature and adventures", "Other"];
+const excitementOptions = [
+    "Restaurants and Food", 
+    "Cocktails and Nightlife", 
+    "Beaches and Scenic Views", 
+    "Wine Farms and Vineyards", 
+    "Art Galleries and Museums", 
+    "Local Markets and Shopping", 
+    "Nature and Outdoor Adventures", 
+    "History and Culture", 
+    "Festivals and Events", 
+    "Hidden Gems and Unique Experiences", 
+    "Other"
+];
 const budgetOptions: Exclude<ItineraryPreferences['budget'], ''>[] = ['Budget', 'Mid range', 'Lux', 'Mix'];
 const radiusOptions: Exclude<ItineraryPreferences['travelRadius'], ''>[] = ['City Center', 'Within 15km', 'Within 30km', 'No preference'];
 const pacingOptions: Exclude<ItineraryPreferences['pacing'], ''>[] = ['Maximize Every Moment', 'Explore and Unwind', 'Go with the Flow'];
