@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import type { ItineraryPreferences } from '../types';
 import { PaperAirplaneIcon } from './icons/PaperAirplaneIcon';
 import { SparklesIcon } from './icons/SparklesIcon';
@@ -10,153 +10,7 @@ import { MapPinIcon } from './icons/MapPinIcon';
 
 interface Props {
   onStart: () => void;
-  onSampleSelect: (samplePrefs: Partial<ItineraryPreferences>) => void;
 }
-
-interface SampleItinerary {
-  title: string;
-  duration: string;
-  budget: ItineraryPreferences['budget'];
-  description: string;
-  preferences: Partial<ItineraryPreferences>;
-  imageUrl: string;
-}
-
-const sampleItineraries: SampleItinerary[] = [
-  {
-    title: "Vibrant City Life in Cape Town",
-    duration: "5 Days",
-    budget: "Mix",
-    description: "From Table Mountain to the V&A Waterfront, experience the best of the Mother City.",
-    imageUrl: "https://images.unsplash.com/photo-1600287199419-8664425e1a7e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
-    preferences: {
-      destination: "Cape Town, South Africa",
-      tripDuration: 5,
-      budget: "Mix",
-      pacing: "Explore and Unwind",
-      tripPurpose: ["Holiday/Vacation", "Nature and Outdoor Adventures"],
-      mostExcitedAbout: ["Beaches and Scenic Views", "Restaurants and Food", "Wine Farms and Vineyards"],
-    },
-  },
-  {
-    title: "Urban Energy in Johannesburg",
-    duration: "4 Days",
-    budget: "Mid range",
-    description: "Explore the historic heart of South Africa's largest city and its vibrant culture.",
-    imageUrl: "https://images.unsplash.com/photo-1554524036-9d0678b4a923?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-    preferences: {
-      destination: "Johannesburg, South Africa",
-      tripDuration: 4,
-      budget: "Mid range",
-      pacing: "Maximize Every Moment",
-      tripPurpose: ["Cultural Exploration"],
-      mostExcitedAbout: ["Art Galleries and Museums", "History and Culture", "Local Markets and Shopping"],
-    },
-  },
-  {
-    title: "Coastal Bliss in Durban",
-    duration: "4 Days",
-    budget: "Budget",
-    description: "Golden beaches, warm Indian Ocean waters, and a vibrant multicultural vibe.",
-    imageUrl: "https://images.unsplash.com/photo-1622960684244-a82a7b119259?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
-    preferences: {
-      destination: "Durban, South Africa",
-      tripDuration: 4,
-      budget: "Budget",
-      pacing: "Go with the Flow",
-      tripPurpose: ["Holiday/Vacation"],
-      mostExcitedAbout: ["Beaches and Scenic Views", "Local Markets and Shopping"],
-    },
-  },
-  {
-    title: "Ancient Medinas in Rabat",
-    duration: "3 Days",
-    budget: "Budget",
-    description: "Discover the imperial city with its historic kasbahs and royal landmarks.",
-    imageUrl: "https://images.unsplash.com/photo-1616191834375-3c1a26a31c5b?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3",
-    preferences: {
-        destination: "Rabat, Morocco",
-        tripDuration: 3,
-        budget: "Budget",
-        pacing: "Explore and Unwind",
-        tripPurpose: ["Cultural Exploration"],
-        mostExcitedAbout: ["History and Culture", "Hidden Gems and Unique Experiences"],
-    },
-  },
-  {
-    title: "Island Escape in Bali",
-    duration: "7 Days",
-    budget: "Mix",
-    description: "Lush rice terraces, ancient temples, and stunning cliffside views await.",
-    imageUrl: "https://images.unsplash.com/photo-1559523182-a284c3fb7cff?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
-    preferences: {
-        destination: "Bali, Indonesia",
-        tripDuration: 7,
-        budget: "Mix",
-        pacing: "Go with the Flow",
-        tripPurpose: ["Adventure and Hiking", "Romantic Getaway"],
-        mostExcitedAbout: ["Beaches and Scenic Views", "Nature and Outdoor Adventures", "Hidden Gems and Unique Experiences"],
-    },
-  },
-    {
-    title: "Future Meets Tradition in Tokyo",
-    duration: "6 Days",
-    budget: "Mid range",
-    description: "Neon-lit skyscrapers, tranquil temples, and world-class cuisine.",
-    imageUrl: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    preferences: {
-      destination: "Tokyo, Japan",
-      tripDuration: 6,
-      budget: "Mid range",
-      pacing: "Maximize Every Moment",
-      tripPurpose: ["Cultural Exploration"],
-      mostExcitedAbout: ["Restaurants and Food", "Local Markets and Shopping", "Cocktails and Nightlife"],
-    },
-  },
-  {
-    title: "Tropical Paradise in Zanzibar",
-    duration: "6 Days",
-    budget: "Mid range",
-    description: "White sand beaches, turquoise waters, and a rich history in Stone Town.",
-    imageUrl: "https://images.unsplash.com/photo-1589327382901-443a533ba4d3?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
-    preferences: {
-      destination: "Zanzibar, Tanzania",
-      tripDuration: 6,
-      budget: "Mid range",
-      pacing: "Go with the Flow",
-      tripPurpose: ["Romantic Getaway", "Holiday/Vacation"],
-      mostExcitedAbout: ["Beaches and Scenic Views", "History and Culture", "Hidden Gems and Unique Experiences"],
-    },
-  }
-];
-
-const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: string } = {
-  'Budget': 'bg-green-100 text-green-800',
-  'Mid range': 'bg-blue-100 text-blue-800',
-  'Lux': 'bg-purple-100 text-purple-800',
-  'Mix': 'bg-yellow-100 text-yellow-800',
-};
-
-const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
-    <button
-      onClick={onSelect}
-      className="relative text-left w-full h-80 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
-    >
-      <div 
-          className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
-          style={{ backgroundImage: `url(${imageUrl})` }}
-      ></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent [text-shadow:0_2px_4px_rgb(0_0_0_/_0.5)]"></div>
-      <div className="absolute bottom-0 left-0 p-5 w-full">
-         <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold text-white bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
-            {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
-        </div>
-        <h3 className="text-lg font-bold text-white">{title}</h3>
-        <p className="text-sm mt-1 text-white">{description}</p>
-      </div>
-    </button>
-);
 
 const FeatureItem: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
     <div>
@@ -168,26 +22,7 @@ const FeatureItem: React.FC<{ icon: React.ReactNode; title: string; children: Re
     </div>
 );
 
-const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
-  const [displayedItineraries, setDisplayedItineraries] = useState<SampleItinerary[]>([]);
-
-  useEffect(() => {
-    const saItineraries = sampleItineraries.filter(it => it.preferences.destination?.includes('South Africa'));
-    const otherItineraries = sampleItineraries.filter(it => !it.preferences.destination?.includes('South Africa'));
-    
-    // 1. Pick one from SA
-    const mandatoryItinerary = saItineraries[Math.floor(Math.random() * saItineraries.length)];
-    
-    // 2. Shuffle others and pick two
-    const shuffledOthers = [...otherItineraries].sort(() => 0.5 - Math.random());
-    const otherTwo = shuffledOthers.slice(0, 2);
-    
-    // 3. Combine and shuffle the final three to randomize their display order
-    const finalThree = [mandatoryItinerary, ...otherTwo].sort(() => 0.5 - Math.random());
-    
-    setDisplayedItineraries(finalThree);
-  }, []);
-
+const LandingPage: React.FC<Props> = ({ onStart }) => {
   return (
     <div className="space-y-24">
       <div className="text-center pt-8 animate-fade-in-up max-w-3xl mx-auto">
@@ -202,21 +37,8 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
           Create My Itinerary
         </button>
       </div>
-
-      <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-3xl font-bold text-center mb-8">Inspired Itineraries</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedItineraries.map((itinerary) => (
-            <SampleCard 
-              key={itinerary.title} 
-              {...itinerary} 
-              onSelect={() => onSampleSelect(itinerary.preferences)}
-            />
-          ))}
-        </div>
-      </div>
       
-      <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
         <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 text-center max-w-5xl mx-auto">
           <FeatureItem icon={<PaperAirplaneIcon />} title="1. Tell us your plans">Fill in quick preferences for your interests, dates, and travel style.</FeatureItem>
@@ -225,7 +47,7 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
         </div>
       </div>
       
-      <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+      <div className="animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
          <h2 className="text-3xl font-bold text-center mb-12">Why Travelers Choose Itinerae</h2>
          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             <FeatureItem icon={<ClockIcon />} title="Instant Planning">Get a full itinerary in seconds, not hours.</FeatureItem>
@@ -235,7 +57,7 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
          </div>
       </div>
 
-      <div className="text-center py-12 md:py-16 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+      <div className="text-center py-12 md:py-16 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
         <h2 className="text-4xl font-bold">Travel smarter with Itinerae.</h2>
       </div>
 
