@@ -28,7 +28,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "5 Days",
     budget: "Mix",
     description: "From Table Mountain to the V&A Waterfront, experience the best of the Mother City.",
-    imageUrl: "https://images.unsplash.com/photo-1572353796333-e00f9e1604ce?q=80&w=1974&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1590523741831-ab7e8b8f9c75?q=80&w=2070&auto=format&fit=crop",
     preferences: {
       destination: "Cape Town, South Africa",
       tripDuration: 5,
@@ -118,7 +118,7 @@ const sampleItineraries: SampleItinerary[] = [
     duration: "6 Days",
     budget: "Mid range",
     description: "White sand beaches, turquoise waters, and a rich history in Stone Town.",
-    imageUrl: "https://images.unsplash.com/photo-1577782472832-65f3f01bdf85?q=80&w=1280&auto=format&fit=crop",
+    imageUrl: "https://images.unsplash.com/photo-1610423012213-35f11a7a8f3b?q=80&w=1974&auto=format&fit=crop",
     preferences: {
       destination: "Zanzibar, Tanzania",
       tripDuration: 6,
