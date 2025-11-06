@@ -188,9 +188,17 @@ const App: React.FC = () => {
       <Header onLogoClick={handleStartOver} />
       <main className="container mx-auto px-4 py-8 md:py-12">
         {renderContent()}
-        <footer className="text-center mt-12 text-secondary text-sm no-print space-y-2">
-          <p>&copy; {new Date().getFullYear()} Itinerae AI. All rights reserved.</p>
-          <a href="#" onClick={(e) => e.preventDefault()} rel="noopener noreferrer" className="hover:text-primary underline">Privacy Policy</a>
+        <footer className="text-center mt-12 text-secondary text-sm no-print space-y-4">
+            <div className="flex justify-center items-center gap-x-6 gap-y-2 flex-wrap">
+                <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">About Itinerae</a>
+                <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Contact</a>
+                <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Terms of Service</a>
+                <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Privacy Policy</a>
+            </div>
+            <div>
+              <p>&copy; {new Date().getFullYear()} Itinerae AI. All rights reserved.</p>
+              <p className="text-xs mt-2">Powered by Google Gemini</p>
+            </div>
         </footer>
       </main>
     </div>

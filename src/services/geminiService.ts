@@ -43,6 +43,60 @@ const itinerarySchema = {
         required: ['day', 'title', 'theme', 'activities'],
       },
     },
+    alternativeSuggestions: {
+      type: Type.OBJECT,
+      description: "A list of alternative suggestions for activities and places that were not included in the main itinerary but are highly recommended.",
+      properties: {
+        topRestaurants: {
+          type: Type.ARRAY,
+          description: "A list of 3-5 top restaurants not included in the itinerary.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the restaurant." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description of the restaurant (e.g., cuisine, specialty, ambiance)." }
+            },
+            required: ['name', 'description']
+          }
+        },
+        topExperiences: {
+          type: Type.ARRAY,
+          description: "A list of 3-5 top experiences or attractions not included in the itinerary.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the experience." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description of the experience." }
+            },
+            required: ['name', 'description']
+          }
+        },
+        topBeaches: {
+          type: Type.ARRAY,
+          description: "If the destination is coastal, provide a list of 3-5 top beaches. If not applicable, return an empty array.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the beach." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description of the beach." }
+            },
+            required: ['name', 'description']
+          }
+        },
+        otherIdeas: {
+          type: Type.ARRAY,
+          description: "A list of 2-3 other interesting ideas, like a unique shop, a scenic walk, or a local market.",
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              name: { type: Type.STRING, description: "Name of the idea/place." },
+              description: { type: Type.STRING, description: "A brief, one-sentence description." }
+            },
+            required: ['name', 'description']
+          }
+        }
+      }
+    }
   },
   required: ['tripTitle', 'destination', 'duration', 'summary', 'weather', 'dailyPlan'],
 };
@@ -106,6 +160,13 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     5.  The output must follow the provided JSON schema precisely.
     6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
     7.  Address the user by their name, ${preferences.name}, in the summary.
+    8.  **Provide Alternative Suggestions:** After creating the daily plan, add an optional section called \`alternativeSuggestions\`. This section should list top-rated places that didn't fit into the main itinerary but are worth considering.
+        -   Include 3-5 \`topRestaurants\`.
+        -   Include 3-5 \`topExperiences\` (e.g., museums, tours, viewpoints).
+        -   If the destination is coastal, include 3-5 \`topBeaches\`. If not, this MUST be an empty array.
+        -   Include 2-3 \`otherIdeas\` (e.g., unique shops, parks, local markets).
+        -   For each item, provide a \`name\` and a brief \`description\`.
+        -   If no suitable suggestions can be found for a category, return an empty array for it.
   `;
 
   try {
@@ -156,6 +217,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, and reliable reservation links if you add new activities.
     4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
+    6.  **Maintain Alternative Suggestions:** Ensure the \`alternativeSuggestions\` section is preserved in the final output. If the user's request involves one of the suggestions (e.g., "replace the museum with that alternative restaurant you suggested"), update both the daily plan and the suggestions list accordingly. If the user's request is unrelated to the suggestions, return the original \`alternativeSuggestions\` object unmodified.
   `;
 
   try {

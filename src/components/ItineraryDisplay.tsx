@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ItineraryPlan } from '../types';
+import type { ItineraryPlan, SuggestionItem } from '../types';
 import { WeatherIcon } from './icons/WeatherIcon';
 import { MapPinIcon } from './icons/MapPinIcon';
 import { ClockIcon } from './icons/ClockIcon';
@@ -11,6 +11,9 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { InformationCircleIcon } from './icons/InformationCircleIcon';
 import { ArrowPathIcon } from './icons/ArrowPathIcon';
+import { RestaurantIcon } from './icons/RestaurantIcon';
+import { CameraIcon } from './icons/CameraIcon';
+import { SunIcon } from './icons/SunIcon';
 
 interface Props {
   itinerary: ItineraryPlan;
@@ -38,6 +41,27 @@ const ActionButton: React.FC<{ onClick: () => void; icon: React.ReactNode; child
     {children}
   </button>
 );
+
+const SuggestionSection: React.FC<{ title: string; items: SuggestionItem[]; icon: React.ReactNode }> = ({ title, items, icon }) => {
+  if (!items || items.length === 0) return null;
+
+  return (
+    <div className="bg-background p-6 rounded-xl border border-border">
+      <div className="flex items-center mb-4">
+        <div className="flex-shrink-0 w-8 h-8 mr-3 text-secondary">{icon}</div>
+        <h4 className="text-xl font-bold">{title}</h4>
+      </div>
+      <ul className="space-y-4">
+        {items.map((item, index) => (
+          <li key={index} className="border-t border-border pt-3 first:pt-0 first:border-none">
+            <p className="font-semibold text-primary">{item.name}</p>
+            <p className="text-sm text-secondary">{item.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 
 const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining }) => {
@@ -91,43 +115,47 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
     }
   };
 
+  // FIX: Added Array.isArray type guard to fix "Property 'length' does not exist on type 'unknown'" error.
+  const hasSuggestions = itinerary.alternativeSuggestions && (Object.values(itinerary.alternativeSuggestions).some(arr => Array.isArray(arr) && arr.length > 0));
+
   return (
     <div className="animate-fade-in-up">
       <div id="printable-area">
         <div className="text-center mb-10">
-          <h2 className="text-5xl font-serif font-bold text-primary">{itinerary.tripTitle}</h2>
-          <p className="mt-4 text-lg text-secondary max-w-3xl mx-auto">{itinerary.summary}</p>
+          <h2 className="text-4xl font-bold">{itinerary.tripTitle}</h2>
+          <p className="mt-2 text-lg text-secondary max-w-2xl mx-auto">{itinerary.summary}</p>
         </div>
         
         {itinerary.weather && (
-          <div className="mb-10 py-6 border-y border-border flex items-center justify-center gap-4 text-center">
-            <WeatherIcon className="h-8 w-8 text-secondary flex-shrink-0" />
+          <div className="mb-8 bg-background border border-border rounded-xl p-5 flex items-center">
+            <WeatherIcon className="h-8 w-8 text-secondary mr-4 flex-shrink-0" />
             <div>
-              <h4 className="font-bold text-primary">Weather Outlook</h4>
-              <p className="text-secondary text-sm">{itinerary.weather}</p>
+              <h4 className="font-bold text-primary text-lg">Weather Outlook</h4>
+              <p className="text-secondary">{itinerary.weather}</p>
             </div>
           </div>
         )}
 
-        <div className="space-y-12">
+        <div className="space-y-8">
           {itinerary.dailyPlan.map(day => {
             const dayDate = getDayDate(day.day);
             return (
-            <div key={day.day} className="border-t border-border pt-8 first:border-t-0 first:pt-0">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-6">
-                <div>
-                  <p className="text-sm font-semibold text-secondary tracking-widest uppercase mb-1">Day {day.day}</p>
-                  <h3 className="text-3xl font-bold">{day.title}</h3>
+            <div key={day.day} className="daily-plan-card bg-background p-6 rounded-xl border border-border">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
+                <div className="flex items-center mb-2 sm:mb-0">
+                  <div className="bg-accent text-white rounded-full h-10 w-10 flex-shrink-0 flex items-center justify-center font-bold text-lg mr-4">
+                    {day.day}
+                  </div>
+                  <div>
+                    <h3 className="text-2xl font-bold">{day.title}</h3>
+                    <span className="text-sm font-medium bg-accent/10 text-accent px-2.5 py-0.5 rounded-full">{day.theme}</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 mt-2 sm:mt-0 text-right">
-                  <span className="text-sm font-medium bg-accent/10 text-accent px-2.5 py-0.5 rounded-full">{day.theme}</span>
-                  {dayDate && <p className="text-sm font-semibold text-secondary flex-shrink-0">{dayDate}</p>}
-                </div>
+                 {dayDate && <p className="text-sm font-semibold text-secondary sm:text-right">{dayDate}</p>}
               </div>
 
-
               {day.note && (
-                <div className="mb-6 bg-yellow-400/10 border-l-4 border-yellow-500/40 rounded-r-lg p-4 flex items-start">
+                <div className="mb-4 bg-yellow-400/10 border-l-4 border-yellow-500/40 rounded-r-lg p-4 flex items-start">
                   <InformationCircleIcon className="h-6 w-6 text-yellow-500 mr-3 flex-shrink-0 mt-0.5" />
                   <div>
                     <h5 className="font-bold text-yellow-800">Heads Up!</h5>
@@ -136,11 +164,11 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
                 </div>
               )}
 
-              <div className="relative border-l border-border ml-4 mt-4">
+              <div className="border-l-2 border-border/50 ml-5 pl-10 py-2 space-y-6">
                 {day.activities.map((activity, index) => (
-                  <div key={index} className={`relative pl-8 ${index === day.activities.length - 1 ? 'pb-1' : 'pb-10'}`}>
-                    <div className="absolute -left-[6.5px] top-1 h-3 w-3 bg-accent rounded-full ring-4 ring-surface"></div>
-                    <p className="font-semibold text-accent text-base mb-1">{activity.time}</p>
+                  <div key={index} className="relative">
+                    <div className="absolute -left-[30px] top-1.5 h-4 w-4 bg-surface border-2 border-accent rounded-full"></div>
+                    <p className="font-semibold text-accent text-lg">{activity.time}</p>
                     <p className="text-primary font-bold text-lg">{activity.description}</p>
                     {activity.details && <p className="text-sm text-secondary italic mt-1 mb-3">{activity.details}</p>}
                     
@@ -157,7 +185,7 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
                           href={activity.reservationLink} 
                           target="_blank" 
                           rel="noopener noreferrer"
-                          className="inline-flex items-center bg-accent/10 text-accent font-semibold py-2 px-4 rounded-lg hover:bg-accent/20 transition-colors duration-300 text-sm"
+                          className="inline-flex items-center bg-gray-100 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-300 text-sm"
                         >
                           <CalendarIcon className="h-5 w-5 mr-2" />
                           Book a Table
@@ -170,6 +198,35 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
             </div>
           )})}
         </div>
+
+        {hasSuggestions && (
+          <div className="mt-12 pt-8 border-t border-border">
+            <h3 className="text-3xl font-bold text-center mb-2">More to Explore</h3>
+            <p className="text-center text-secondary mb-8">Consider these other great options in {itinerary.destination.split(',')[0]}.</p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SuggestionSection 
+                title="Top Restaurants" 
+                items={itinerary.alternativeSuggestions.topRestaurants}
+                icon={<RestaurantIcon />}
+              />
+              <SuggestionSection 
+                title="Top Experiences" 
+                items={itinerary.alternativeSuggestions.topExperiences}
+                icon={<CameraIcon />}
+              />
+              <SuggestionSection 
+                title="Top Beaches" 
+                items={itinerary.alternativeSuggestions.topBeaches}
+                icon={<SunIcon />}
+              />
+              <SuggestionSection 
+                title="Other Ideas" 
+                items={itinerary.alternativeSuggestions.otherIdeas}
+                icon={<LightBulbIcon />}
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="mt-12 pt-8 border-t border-border space-y-8 no-print">
