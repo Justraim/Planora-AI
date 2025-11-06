@@ -192,7 +192,6 @@ const App: React.FC = () => {
             </div>
             <div>
               <p>&copy; {new Date().getFullYear()} Itinerae AI. All rights reserved.</p>
-              <p className="text-xs mt-2">Powered by Google Gemini</p>
             </div>
         </footer>
       </main>
