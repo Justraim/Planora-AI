@@ -71,11 +71,11 @@ const sampleItineraries: SampleItinerary[] = [
 ];
 
 const featuredDestinations = [
-    { name: 'Cape Town', imageUrl: 'https://images.unsplash.com/photo-1576487248805-cf40f3c643b0?q=80&w=2070&auto=format&fit=crop', preferences: { destination: 'Cape Town, South Africa' } },
-    { name: 'Tokyo', imageUrl: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?q=80&w=1974&auto=format&fit=crop', preferences: { destination: 'Tokyo, Japan' } },
-    { name: 'Lisbon', imageUrl: 'https://images.unsplash.com/photo-1587377022895-77b70a0f8b3d?q=80&w=1974&auto=format&fit=crop', preferences: { destination: 'Lisbon, Portugal' } },
-    { name: 'Zanzibar', imageUrl: 'https://images.unsplash.com/photo-1601752882470-0e9e6a350165?q=80&w=1964&auto=format&fit=crop', preferences: { destination: 'Zanzibar, Tanzania' } },
-    { name: 'Bali', imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1965&auto=format&fit=crop', preferences: { destination: 'Bali, Indonesia' } },
+    { name: 'Cape Town', imageUrl: 'https://images.unsplash.com/photo-1576487248805-cf40f3c0598ce?q=80&w=1974&auto=format&fit=crop', preferences: { destination: 'Cape Town, South Africa' } },
+    { name: 'Tokyo', imageUrl: 'https://images.unsplash.com/photo-1513407030348-c983a97b98d8?q=80&w=2072&auto=format&fit=crop', preferences: { destination: 'Tokyo, Japan' } },
+    { name: 'Lisbon', imageUrl: 'https://images.unsplash.com/photo-1588691509173-363f81e74f8b?q=80&w=1974&auto=format&fit=crop', preferences: { destination: 'Lisbon, Portugal' } },
+    { name: 'Zanzibar', imageUrl: 'https://images.unsplash.com/photo-1600722230949-93e736733224?q=80&w=2070&auto=format&fit=crop', preferences: { destination: 'Zanzibar, Tanzania' } },
+    { name: 'Bali', imageUrl: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1938&auto=format&fit=crop', preferences: { destination: 'Bali, Indonesia' } },
 ];
 
 
@@ -204,12 +204,6 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
 
       <div className="text-center py-12 md:py-16 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
         <h2 className="text-4xl font-bold">Travel smarter with Itinerae.</h2>
-        <button
-          onClick={onStart}
-          className="mt-8 bg-accent text-white font-semibold py-3 px-6 rounded-lg hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent/30 transition-all duration-300"
-        >
-          Create My Itinerary
-        </button>
       </div>
 
     </div>

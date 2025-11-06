@@ -191,7 +191,7 @@ const App: React.FC = () => {
         <footer className="text-center mt-12 text-secondary text-sm no-print space-y-4">
             <div className="flex justify-center items-center gap-x-6 gap-y-2 flex-wrap">
                 <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">About Itinerae</a>
-                <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Contact</a>
+                <a href="mailto:Info@Itinerae.co.za" className="hover:text-primary">Info@Itinerae.co.za</a>
                 <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Terms of Service</a>
                 <a href="#" onClick={(e) => e.preventDefault()} className="hover:text-primary">Privacy Policy</a>
             </div>
