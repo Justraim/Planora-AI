@@ -199,7 +199,7 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
           )})}
         </div>
 
-        {hasSuggestions && (
+        {hasSuggestions && itinerary.alternativeSuggestions && (
           <div className="mt-12 pt-8 border-t border-border">
             <h3 className="text-3xl font-bold text-center mb-2">More to Explore</h3>
             <p className="text-center text-secondary mb-8">Consider these other great options in {itinerary.destination.split(',')[0]}.</p>
