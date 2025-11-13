@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ItineraryPlan, SuggestionItem } from '../types';
+import type { ItineraryPlan } from '../types';
 import { WeatherIcon } from './icons/WeatherIcon';
 import { MapPinIcon } from './icons/MapPinIcon';
 import { ClockIcon } from './icons/ClockIcon';
@@ -11,9 +11,6 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { InformationCircleIcon } from './icons/InformationCircleIcon';
 import { ArrowPathIcon } from './icons/ArrowPathIcon';
-import { RestaurantIcon } from './icons/RestaurantIcon';
-import { CameraIcon } from './icons/CameraIcon';
-import { SunIcon } from './icons/SunIcon';
 
 interface Props {
   itinerary: ItineraryPlan;
@@ -21,6 +18,8 @@ interface Props {
   onReset: () => void;
   onRefine: (prompt: string) => Promise<void>;
   isRefining: boolean;
+  refineError: string | null;
+  clearRefineError: () => void;
 }
 
 const ActivityDetail: React.FC<{ icon: React.ReactNode; label: string; value: string }> = ({ icon, label, value }) => (
@@ -42,29 +41,7 @@ const ActionButton: React.FC<{ onClick: () => void; icon: React.ReactNode; child
   </button>
 );
 
-const SuggestionSection: React.FC<{ title: string; items: SuggestionItem[]; icon: React.ReactNode }> = ({ title, items, icon }) => {
-  if (!items || items.length === 0) return null;
-
-  return (
-    <div className="bg-background p-6 rounded-xl border border-border">
-      <div className="flex items-center mb-4">
-        <div className="flex-shrink-0 w-8 h-8 mr-3 text-secondary">{icon}</div>
-        <h4 className="text-xl font-bold">{title}</h4>
-      </div>
-      <ul className="space-y-4">
-        {items.map((item, index) => (
-          <li key={index} className="border-t border-border pt-3 first:pt-0 first:border-none">
-            <p className="font-semibold text-primary">{item.name}</p>
-            <p className="text-sm text-secondary">{item.description}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
-
-const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining }) => {
+const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining, refineError, clearRefineError }) => {
   const [refinementPrompt, setRefinementPrompt] = useState('');
 
   const getDayDate = (dayNumber: number): string => {
@@ -117,7 +94,12 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
     }
   };
 
-  const hasSuggestions = itinerary.alternativeSuggestions && (Object.values(itinerary.alternativeSuggestions).some(arr => Array.isArray(arr) && arr.length > 0));
+  const handlePromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (refineError) {
+      clearRefineError();
+    }
+    setRefinementPrompt(e.target.value);
+  }
 
   return (
     <div className="animate-fade-in-up">
@@ -133,6 +115,16 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
             <div>
               <h4 className="font-bold text-primary text-lg">Weather Outlook</h4>
               <p className="text-secondary">{itinerary.weather}</p>
+            </div>
+          </div>
+        )}
+
+        {itinerary.disclaimer && (
+          <div className="mb-8 bg-blue-50 border border-blue-200 rounded-xl p-5 flex items-center">
+            <InformationCircleIcon className="h-8 w-8 text-blue-500 mr-4 flex-shrink-0" />
+            <div>
+              <h4 className="font-bold text-primary text-lg">Good to Know</h4>
+              <p className="text-secondary">{itinerary.disclaimer}</p>
             </div>
           </div>
         )}
@@ -199,35 +191,6 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
             </div>
           )})}
         </div>
-
-        {hasSuggestions && itinerary.alternativeSuggestions && (
-          <div className="mt-12 pt-8 border-t border-border">
-            <h3 className="text-3xl font-bold text-center mb-2">More to Explore</h3>
-            <p className="text-center text-secondary mb-8">Consider these other great options in {itinerary.destination.split(',')[0]}.</p>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <SuggestionSection 
-                title="Top Restaurants" 
-                items={itinerary.alternativeSuggestions.topRestaurants}
-                icon={<RestaurantIcon />}
-              />
-              <SuggestionSection 
-                title="Top Experiences" 
-                items={itinerary.alternativeSuggestions.topExperiences}
-                icon={<CameraIcon />}
-              />
-              <SuggestionSection 
-                title="Top Beaches" 
-                items={itinerary.alternativeSuggestions.topBeaches}
-                icon={<SunIcon />}
-              />
-              <SuggestionSection 
-                title="Other Ideas" 
-                items={itinerary.alternativeSuggestions.otherIdeas}
-                icon={<LightBulbIcon />}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="mt-12 pt-8 border-t border-border space-y-8 no-print">
@@ -244,13 +207,19 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
         </div>
 
         <div className="bg-background p-6 rounded-xl border border-border">
+           {refineError && (
+              <div className="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md" role="alert">
+                <p className="font-bold">Refinement Error</p>
+                <p>{refineError}</p>
+              </div>
+            )}
            <h4 className="text-lg font-semibold text-primary text-center">Want to change something?</h4>
            <p className="text-center text-sm text-secondary mb-4">Ask the AI to refine your plan. e.g., "Swap the museum on Day 2 for a park."</p>
            <form onSubmit={handleRefineSubmit} className="flex flex-col sm:flex-row gap-2">
             <input 
               type="text"
               value={refinementPrompt}
-              onChange={(e) => setRefinementPrompt(e.target.value)}
+              onChange={handlePromptChange}
               placeholder="Your request..."
               disabled={isRefining}
               className="flex-grow w-full px-4 py-2 bg-surface border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition text-primary disabled:opacity-50"

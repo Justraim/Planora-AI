@@ -2,7 +2,7 @@ export interface ItineraryPreferences {
   name: string;
   destination: string;
   travelFrom: string;
-  travelRadius: 'City Centre' | 'Within 15km' | 'Within 30km' | 'No preference' | '';
+  travelRadius: 'City Center' | 'Within 15km' | 'Within 30km' | 'No preference' | '';
   startDate: string;
   tripDuration: number;
   numberOfTravelers: number;
@@ -35,11 +35,6 @@ export interface DailyPlan {
   note?: string;
 }
 
-export interface SuggestionItem {
-  name: string;
-  description: string;
-}
-
 export interface ItineraryPlan {
   tripTitle: string;
   destination: string;
@@ -47,11 +42,6 @@ export interface ItineraryPlan {
   summary: string;
   weather: string;
   dailyPlan: DailyPlan[];
-  alternativeSuggestions?: {
-    topRestaurants: SuggestionItem[];
-    topExperiences: SuggestionItem[];
-    topBeaches: SuggestionItem[];
-    otherIdeas: SuggestionItem[];
-  };
+  disclaimer?: string;
   refinementPrompt?: string;
 }

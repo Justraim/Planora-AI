@@ -3,6 +3,15 @@ import type { ItineraryPreferences, ItineraryPlan } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+/**
+ * Cleans the JSON string received from the AI model by removing markdown fences.
+ * @param text The raw text from the model response.
+ * @returns A clean JSON string.
+ */
+const cleanJson = (text: string): string => {
+  return text.trim().replace(/^```json\s*/, '').replace(/```$/, '');
+}
+
 const itinerarySchema = {
   type: Type.OBJECT,
   properties: {
@@ -11,6 +20,7 @@ const itinerarySchema = {
     duration: { type: Type.INTEGER, description: "The total number of days for the trip, based on the user's input." },
     summary: { type: Type.STRING, description: "A brief, engaging 2-3 sentence summary of the overall trip experience. Address the user by their name." },
     weather: { type: Type.STRING, description: "A summary of the expected weather for the destination during the trip dates, including average temperature and conditions like 'sunny with occasional clouds'." },
+    disclaimer: { type: Type.STRING, description: "A brief disclaimer for the user, reminding them to double-check opening hours and make reservations in advance as things can change. e.g., 'Please double-check opening hours before visiting and book reservations where possible, as times can change.'" },
     dailyPlan: {
       type: Type.ARRAY,
       description: "An array of objects, where each object represents a single day's plan.",
@@ -30,7 +40,7 @@ const itinerarySchema = {
                 time: { type: Type.STRING, description: "Suggested time for the activity (e.g., 'Morning', '9:00 AM', 'Afternoon', 'Evening')." },
                 description: { type: Type.STRING, description: "A concise description of the activity." },
                 details: { type: Type.STRING, description: "Optional: A brief sentence with extra detail about the experience." },
-                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Centre'." },
+                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In the city center'." },
                 tradingHours: { type: Type.STRING, description: "Operating hours, e.g., '9:00 AM - 5:00 PM' or '24/7'." },
                 estimatedCost: { type: Type.STRING, description: "Estimated cost per person. This MUST follow the currency conversion rules." },
                 tip: { type: Type.STRING, description: "A single, helpful tip for the activity, e.g., 'Book tickets online to avoid queues.'" },
@@ -43,60 +53,6 @@ const itinerarySchema = {
         required: ['day', 'title', 'theme', 'activities'],
       },
     },
-    alternativeSuggestions: {
-      type: Type.OBJECT,
-      description: "A list of alternative suggestions for activities and places that were not included in the main itinerary but are highly recommended.",
-      properties: {
-        topRestaurants: {
-          type: Type.ARRAY,
-          description: "A list of 3-5 top restaurants not included in the itinerary.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the restaurant." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description of the restaurant (e.g., cuisine, specialty, ambiance)." }
-            },
-            required: ['name', 'description']
-          }
-        },
-        topExperiences: {
-          type: Type.ARRAY,
-          description: "A list of 3-5 top experiences or attractions not included in the itinerary.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the experience." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description of the experience." }
-            },
-            required: ['name', 'description']
-          }
-        },
-        topBeaches: {
-          type: Type.ARRAY,
-          description: "If the destination is coastal, provide a list of 3-5 top beaches. If not applicable, return an empty array.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the beach." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description of the beach." }
-            },
-            required: ['name', 'description']
-          }
-        },
-        otherIdeas: {
-          type: Type.ARRAY,
-          description: "A list of 2-3 other interesting ideas, like a unique shop, a scenic walk, or a local market.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the idea/place." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description." }
-            },
-            required: ['name', 'description']
-          }
-        }
-      }
-    }
   },
   required: ['tripTitle', 'destination', 'duration', 'summary', 'weather', 'dailyPlan'],
 };
@@ -122,20 +78,20 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     .join(', ');
 
   const prompt = `
-    Create a personalised travel itinerary for ${preferences.name}.
+    Create a personalized travel itinerary for ${preferences.name}.
     Act as an expert travel planner with a knack for creating memorable, practical, and well-structured trips.
 
     **Core Details:**
-    - **Travelling From:** ${preferences.travelFrom} (User's home country/city)
+    - **Traveling From:** ${preferences.travelFrom} (User's home country/city)
     - **Destination:** ${preferences.destination}
     - **Travel Radius:** ${preferences.travelRadius}. Interpret this as follows:
-        - 'City Centre': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
-        - 'Within 15km': Include the city centre and nearby suburbs or points of interest that are a short drive or train ride away.
+        - 'City Center': Focus on walkable areas, central districts, and attractions easily reachable by main public transport hubs.
+        - 'Within 15km': Include the city center and nearby suburbs or points of interest that are a short drive or train ride away.
         - 'Within 30km': Allows for half-day or full-day trips to nearby towns, natural parks, or significant landmarks outside the main city.
         - 'No preference': You have the freedom to suggest the best combination of central and further-afield activities.
     - **Start Date:** ${preferences.startDate}
     - **Trip Duration:** ${preferences.tripDuration} days.
-    - **Number of Travellers:** ${preferences.numberOfTravelers}
+    - **Number of Travelers:** ${preferences.numberOfTravelers}
     - **First Time Visitor?:** ${preferences.firstTime}
     - **Purpose of Trip:** ${tripPurposes}
 
@@ -149,43 +105,37 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     - **Specific Inclusions/Requests:** ${preferences.specificInclusions || 'None'}
 
     **CRITICAL Generation Instructions:**
-    1.  **Smart Currency Conversion:** You MUST compare the 'Travelling From' location with the 'Destination'.
-        - If the trip is **international** (e.g., UK to Japan), all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Example: "¥3,000 (approx. £15 GBP)".
-        - If the trip is **domestic** (e.g., UK to UK), just use the local currency. Example: "£20 GBP".
+    1.  **Smart Currency Conversion:** You MUST determine if the trip is international by comparing the user's 'Traveling From' country and the 'Destination' country.
+        - If the trip is **international**, all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Use standard currency codes (e.g., USD, EUR, JPY). Example for a user from the USA traveling to Japan: "3000 JPY (approx. 20 USD)". If the user's home country is ambiguous, use USD as the default for the parenthetical conversion.
+        - If the trip is **domestic**, use only the local currency and its code. Example for a user from the USA traveling within the USA: "25 USD".
     2.  **Venue & Holiday Awareness (VERY IMPORTANT):**
-        - **Check Operating Days:** Before suggesting an activity like a museum or gallery, verify its typical operating days. For example, many European museums are closed on Mondays. If a venue is likely to be closed on the planned day, DO NOT include it. Suggest a suitable alternative instead.
+        - **Check Operating Days:** Based on your knowledge, note typical operating days/hours for venues like museums. For example, mention if a museum is typically closed on Mondays. DO NOT invent hours. If unknown, omit the 'tradingHours' field.
         - **Research Events & Holidays:** Check for any public holidays, major festivals, or significant events in the destination that coincide with the trip dates. If an event exists, add a concise \`note\` to that day's plan explaining the event and its potential impact (e.g., "Public Holiday: Expect many closures and parades."). If there are no events, omit the \`note\` field.
     3.  **Reliable Restaurant Reservations:** For any restaurant or dining activity, you MUST search for a valid, working reservation link. Prioritize official websites, Google Maps links, or major reservation platforms like OpenTable. **DO NOT invent or provide a non-working URL.** If you cannot find a valid link, omit the \`reservationLink\` field entirely.
     4.  **Detailed Activities:** For **each activity**, provide all applicable details: \`estimatedCost\` (following currency rules), \`tradingHours\`, \`distanceFromCenter\`, and a practical \`tip\`.
-    5.  The output must follow the provided JSON schema precisely.
-    6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
-    7.  Address the user by their name, ${preferences.name}, in the summary.
-    8.  **Provide Alternative Suggestions:** After creating the daily plan, add an optional section called \`alternativeSuggestions\`. This section should list top-rated places that didn't fit into the main itinerary but are worth considering.
-        -   Include 3-5 \`topRestaurants\`.
-        -   Include 3-5 \`topExperiences\` (e.g., museums, tours, viewpoints).
-        -   If the destination is coastal, include 3-5 \`topBeaches\`. If not, this MUST be an empty array.
-        -   Include 2-3 \`otherIdeas\` (e.g., unique shops, parks, local markets).
-        -   For each item, provide a \`name\` and a brief \`description\`.
-        -   If no suitable suggestions can be found for a category, return an empty array for it.
+    5.  **Add a Disclaimer:** Include a \`disclaimer\` field with a friendly message advising the user to verify opening times and book reservations in advance.
+    6.  The output must follow the provided JSON schema precisely.
+    7.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
+    8.  Address the user by their name, ${preferences.name}, in the summary.
   `;
 
+  let text: string | undefined = '';
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-pro',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
         responseSchema: itinerarySchema,
-        temperature: 0.8,
-        topP: 0.9,
+        temperature: 0.5,
       }
     });
 
-    const text = response.text;
+    text = response.text;
     if (!text) {
       throw new Error("Received an empty response from the AI model.");
     }
-    const jsonText = text.trim();
+    const jsonText = cleanJson(text);
     const itineraryData = JSON.parse(jsonText);
     
     if (!itineraryData.dailyPlan || !Array.isArray(itineraryData.dailyPlan)) {
@@ -194,6 +144,9 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     
     return itineraryData as ItineraryPlan;
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error("Failed to parse JSON response from AI. Raw text:", text);
+    }
     console.error("Error generating itinerary with Gemini:", error);
     throw new Error("Failed to generate itinerary. The AI model might be unavailable or the request was invalid.");
   }
@@ -214,28 +167,28 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     **Instructions:**
     1.  Read the original itinerary and the user's request carefully.
     2.  Intelligently modify the \`dailyPlan\` and any other relevant fields (like \`summary\`) to reflect the user's request.
-    3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, and reliable reservation links if you add new activities.
+    3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, reliable reservation links, and the disclaimer if you add new activities.
     4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
-    6.  **Maintain Alternative Suggestions:** Ensure the \`alternativeSuggestions\` section is preserved in the final output. If the user's request involves one of the suggestions (e.g., "replace the museum with that alternative restaurant you suggested"), update both the daily plan and the suggestions list accordingly. If the user's request is unrelated to the suggestions, return the original \`alternativeSuggestions\` object unmodified.
   `;
-
+  
+  let text: string | undefined = '';
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-pro',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
         responseSchema: itinerarySchema,
-        temperature: 0.7,
+        temperature: 0.5,
       }
     });
 
-    const text = response.text;
+    text = response.text;
     if (!text) {
         throw new Error("Received an empty refined response from the AI model.");
     }
-    const jsonText = text.trim();
+    const jsonText = cleanJson(text);
     const refinedData = JSON.parse(jsonText);
     
     if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyPlan)) {
@@ -244,6 +197,9 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
 
     return refinedData as ItineraryPlan;
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error("Failed to parse JSON response from AI during refinement. Raw text:", text);
+    }
     console.error("Error refining itinerary with Gemini:", error);
     throw new Error("Failed to refine itinerary.");
   }
