@@ -42,5 +42,6 @@ export interface ItineraryPlan {
   summary: string;
   weather: string;
   dailyPlan: DailyPlan[];
+  disclaimer?: string;
   refinementPrompt?: string;
 }

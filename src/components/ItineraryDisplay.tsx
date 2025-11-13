@@ -119,6 +119,16 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
           </div>
         )}
 
+        {itinerary.disclaimer && (
+          <div className="mb-8 bg-blue-50 border border-blue-200 rounded-xl p-5 flex items-center">
+            <InformationCircleIcon className="h-8 w-8 text-blue-500 mr-4 flex-shrink-0" />
+            <div>
+              <h4 className="font-bold text-primary text-lg">Good to Know</h4>
+              <p className="text-secondary">{itinerary.disclaimer}</p>
+            </div>
+          </div>
+        )}
+
         <div className="space-y-8">
           {itinerary.dailyPlan.map(day => {
             const dayDate = getDayDate(day.day);

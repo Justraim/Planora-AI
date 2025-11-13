@@ -20,6 +20,7 @@ const itinerarySchema = {
     duration: { type: Type.INTEGER, description: "The total number of days for the trip, based on the user's input." },
     summary: { type: Type.STRING, description: "A brief, engaging 2-3 sentence summary of the overall trip experience. Address the user by their name." },
     weather: { type: Type.STRING, description: "A summary of the expected weather for the destination during the trip dates, including average temperature and conditions like 'sunny with occasional clouds'." },
+    disclaimer: { type: Type.STRING, description: "A brief disclaimer for the user, reminding them to double-check opening hours and make reservations in advance as things can change. e.g., 'Please double-check opening hours before visiting and book reservations where possible, as times can change.'" },
     dailyPlan: {
       type: Type.ARRAY,
       description: "An array of objects, where each object represents a single day's plan.",
@@ -108,19 +109,20 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
         - If the trip is **international**, all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Use standard currency codes (e.g., USD, EUR, JPY). Example for a user from the USA traveling to Japan: "3000 JPY (approx. 20 USD)". If the user's home country is ambiguous, use USD as the default for the parenthetical conversion.
         - If the trip is **domestic**, use only the local currency and its code. Example for a user from the USA traveling within the USA: "25 USD".
     2.  **Venue & Holiday Awareness (VERY IMPORTANT):**
-        - **Check Operating Days:** Before suggesting an activity like a museum or gallery, verify its typical operating days. For example, many European museums are closed on Mondays. If a venue is likely to be closed on the planned day, DO NOT include it. Suggest a suitable alternative instead.
+        - **Check Operating Days:** Based on your knowledge, note typical operating days/hours for venues like museums. For example, mention if a museum is typically closed on Mondays. DO NOT invent hours. If unknown, omit the 'tradingHours' field.
         - **Research Events & Holidays:** Check for any public holidays, major festivals, or significant events in the destination that coincide with the trip dates. If an event exists, add a concise \`note\` to that day's plan explaining the event and its potential impact (e.g., "Public Holiday: Expect many closures and parades."). If there are no events, omit the \`note\` field.
     3.  **Reliable Restaurant Reservations:** For any restaurant or dining activity, you MUST search for a valid, working reservation link. Prioritize official websites, Google Maps links, or major reservation platforms like OpenTable. **DO NOT invent or provide a non-working URL.** If you cannot find a valid link, omit the \`reservationLink\` field entirely.
     4.  **Detailed Activities:** For **each activity**, provide all applicable details: \`estimatedCost\` (following currency rules), \`tradingHours\`, \`distanceFromCenter\`, and a practical \`tip\`.
-    5.  The output must follow the provided JSON schema precisely.
-    6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
-    7.  Address the user by their name, ${preferences.name}, in the summary.
+    5.  **Add a Disclaimer:** Include a \`disclaimer\` field with a friendly message advising the user to verify opening times and book reservations in advance.
+    6.  The output must follow the provided JSON schema precisely.
+    7.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
+    8.  Address the user by their name, ${preferences.name}, in the summary.
   `;
 
   let text: string | undefined = '';
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-pro',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
@@ -165,7 +167,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     **Instructions:**
     1.  Read the original itinerary and the user's request carefully.
     2.  Intelligently modify the \`dailyPlan\` and any other relevant fields (like \`summary\`) to reflect the user's request.
-    3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, and reliable reservation links if you add new activities.
+    3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, reliable reservation links, and the disclaimer if you add new activities.
     4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
   `;
@@ -173,7 +175,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
   let text: string | undefined = '';
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-2.5-pro',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
