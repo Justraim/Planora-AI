@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { ItineraryPlan, SuggestionItem } from '../types';
+import type { ItineraryPlan } from '../types';
 import { WeatherIcon } from './icons/WeatherIcon';
 import { MapPinIcon } from './icons/MapPinIcon';
 import { ClockIcon } from './icons/ClockIcon';
@@ -11,9 +11,6 @@ import { SparklesIcon } from './icons/SparklesIcon';
 import { CalendarIcon } from './icons/CalendarIcon';
 import { InformationCircleIcon } from './icons/InformationCircleIcon';
 import { ArrowPathIcon } from './icons/ArrowPathIcon';
-import { RestaurantIcon } from './icons/RestaurantIcon';
-import { CameraIcon } from './icons/CameraIcon';
-import { SunIcon } from './icons/SunIcon';
 
 interface Props {
   itinerary: ItineraryPlan;
@@ -43,28 +40,6 @@ const ActionButton: React.FC<{ onClick: () => void; icon: React.ReactNode; child
     {children}
   </button>
 );
-
-const SuggestionSection: React.FC<{ title: string; items: SuggestionItem[]; icon: React.ReactNode }> = ({ title, items, icon }) => {
-  if (!items || items.length === 0) return null;
-
-  return (
-    <div className="bg-background p-6 rounded-xl border border-border">
-      <div className="flex items-center mb-4">
-        <div className="flex-shrink-0 w-8 h-8 mr-3 text-secondary">{icon}</div>
-        <h4 className="text-xl font-bold">{title}</h4>
-      </div>
-      <ul className="space-y-4">
-        {items.map((item, index) => (
-          <li key={index} className="border-t border-border pt-3 first:pt-0 first:border-none">
-            <p className="font-semibold text-primary">{item.name}</p>
-            <p className="text-sm text-secondary">{item.description}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-
 
 const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining, refineError, clearRefineError }) => {
   const [refinementPrompt, setRefinementPrompt] = useState('');
@@ -125,8 +100,6 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
     }
     setRefinementPrompt(e.target.value);
   }
-
-  const hasSuggestions = itinerary.alternativeSuggestions && (Object.values(itinerary.alternativeSuggestions).some(arr => Array.isArray(arr) && arr.length > 0));
 
   return (
     <div className="animate-fade-in-up">
@@ -208,35 +181,6 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
             </div>
           )})}
         </div>
-
-        {hasSuggestions && itinerary.alternativeSuggestions && (
-          <div className="mt-12 pt-8 border-t border-border">
-            <h3 className="text-3xl font-bold text-center mb-2">More to Explore</h3>
-            <p className="text-center text-secondary mb-8">Consider these other great options in {itinerary.destination.split(',')[0]}.</p>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <SuggestionSection 
-                title="Top Restaurants" 
-                items={itinerary.alternativeSuggestions.topRestaurants}
-                icon={<RestaurantIcon />}
-              />
-              <SuggestionSection 
-                title="Top Experiences" 
-                items={itinerary.alternativeSuggestions.topExperiences}
-                icon={<CameraIcon />}
-              />
-              <SuggestionSection 
-                title="Top Beaches" 
-                items={itinerary.alternativeSuggestions.topBeaches}
-                icon={<SunIcon />}
-              />
-              <SuggestionSection 
-                title="Other Ideas" 
-                items={itinerary.alternativeSuggestions.otherIdeas}
-                icon={<LightBulbIcon />}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
       <div className="mt-12 pt-8 border-t border-border space-y-8 no-print">

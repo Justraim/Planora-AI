@@ -35,11 +35,6 @@ export interface DailyPlan {
   note?: string;
 }
 
-export interface SuggestionItem {
-  name: string;
-  description: string;
-}
-
 export interface ItineraryPlan {
   tripTitle: string;
   destination: string;
@@ -47,11 +42,5 @@ export interface ItineraryPlan {
   summary: string;
   weather: string;
   dailyPlan: DailyPlan[];
-  alternativeSuggestions?: {
-    topRestaurants: SuggestionItem[];
-    topExperiences: SuggestionItem[];
-    topBeaches: SuggestionItem[];
-    otherIdeas: SuggestionItem[];
-  };
   refinementPrompt?: string;
 }

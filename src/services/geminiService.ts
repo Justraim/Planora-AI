@@ -52,60 +52,6 @@ const itinerarySchema = {
         required: ['day', 'title', 'theme', 'activities'],
       },
     },
-    alternativeSuggestions: {
-      type: Type.OBJECT,
-      description: "A list of alternative suggestions for activities and places that were not included in the main itinerary but are highly recommended.",
-      properties: {
-        topRestaurants: {
-          type: Type.ARRAY,
-          description: "A list of 3-5 top restaurants not included in the itinerary.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the restaurant." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description of the restaurant (e.g., cuisine, specialty, ambiance)." }
-            },
-            required: ['name', 'description']
-          }
-        },
-        topExperiences: {
-          type: Type.ARRAY,
-          description: "A list of 3-5 top experiences or attractions not included in the itinerary.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the experience." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description of the experience." }
-            },
-            required: ['name', 'description']
-          }
-        },
-        topBeaches: {
-          type: Type.ARRAY,
-          description: "If the destination is coastal, provide a list of 3-5 top beaches. If not applicable, return an empty array.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the beach." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description of the beach." }
-            },
-            required: ['name', 'description']
-          }
-        },
-        otherIdeas: {
-          type: Type.ARRAY,
-          description: "A list of 2-3 other interesting ideas, like a unique shop, a scenic walk, or a local market.",
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              name: { type: Type.STRING, description: "Name of the idea/place." },
-              description: { type: Type.STRING, description: "A brief, one-sentence description." }
-            },
-            required: ['name', 'description']
-          }
-        }
-      }
-    }
   },
   required: ['tripTitle', 'destination', 'duration', 'summary', 'weather', 'dailyPlan'],
 };
@@ -159,7 +105,7 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
 
     **CRITICAL Generation Instructions:**
     1.  **Smart Currency Conversion:** You MUST determine if the trip is international by comparing the user's 'Traveling From' country and the 'Destination' country.
-        - If the trip is **international**, all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Use standard currency codes (e.g., USD, EUR, JPY). Example for a user from the USA traveling to Japan: "3000 JPY (approx. 20 USD)".
+        - If the trip is **international**, all costs in \`estimatedCost\` MUST be in the destination's local currency, followed by an approximate conversion to the user's home currency in parentheses. Use standard currency codes (e.g., USD, EUR, JPY). Example for a user from the USA traveling to Japan: "3000 JPY (approx. 20 USD)". If the user's home country is ambiguous, use USD as the default for the parenthetical conversion.
         - If the trip is **domestic**, use only the local currency and its code. Example for a user from the USA traveling within the USA: "25 USD".
     2.  **Venue & Holiday Awareness (VERY IMPORTANT):**
         - **Check Operating Days:** Before suggesting an activity like a museum or gallery, verify its typical operating days. For example, many European museums are closed on Mondays. If a venue is likely to be closed on the planned day, DO NOT include it. Suggest a suitable alternative instead.
@@ -169,7 +115,6 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     5.  The output must follow the provided JSON schema precisely.
     6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
     7.  Address the user by their name, ${preferences.name}, in the summary.
-    8.  **Alternative Suggestions:** Fill the \`alternativeSuggestions\` object with a few other highly-rated local spots that didn't make it into the main plan. Include restaurants, experiences, and beaches (if applicable). If a category has no relevant suggestions, return an empty array for it.
   `;
 
   let text: string | undefined = '';
@@ -223,7 +168,6 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     3.  Remember to adhere to all original constraints like currency conversion, venue closures, holiday checks, and reliable reservation links if you add new activities.
     4.  Ensure the updated plan remains logical, geographically sensible, and consistent.
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
-    6.  **Maintain Alternative Suggestions:** Ensure the \`alternativeSuggestions\` section is preserved in the final output. If the user's request involves one of the suggestions (e.g., "replace the museum with that alternative restaurant you suggested"), update both the daily plan and the suggestions list accordingly. If the user's request is unrelated to the suggestions, return the original \`alternativeSuggestions\` object unmodified.
   `;
   
   let text: string | undefined = '';
