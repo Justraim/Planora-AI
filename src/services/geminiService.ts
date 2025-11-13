@@ -169,15 +169,10 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     5.  The output must follow the provided JSON schema precisely.
     6.  The itinerary must be logical, geographically sensible, and perfectly aligned with all user preferences.
     7.  Address the user by their name, ${preferences.name}, in the summary.
-    8.  **Provide Alternative Suggestions:** After creating the daily plan, add an optional section called \`alternativeSuggestions\`. This section should list top-rated places that didn't fit into the main itinerary but are worth considering.
-        -   Include 3-5 \`topRestaurants\`.
-        -   Include 3-5 \`topExperiences\` (e.g., museums, tours, viewpoints).
-        -   If the destination is coastal, include 3-5 \`topBeaches\`. If not, this MUST be an empty array.
-        -   Include 2-3 \`otherIdeas\` (e.g., unique shops, parks, local markets).
-        -   For each item, provide a \`name\` and a brief \`description\`.
-        -   If no suitable suggestions can be found for a category, return an empty array for it.
+    8.  **Alternative Suggestions:** Fill the \`alternativeSuggestions\` object with a few other highly-rated local spots that didn't make it into the main plan. Include restaurants, experiences, and beaches (if applicable). If a category has no relevant suggestions, return an empty array for it.
   `;
 
+  let text = '';
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -185,12 +180,11 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
       config: {
         responseMimeType: 'application/json',
         responseSchema: itinerarySchema,
-        temperature: 0.8,
-        topP: 0.9,
+        temperature: 0.5,
       }
     });
 
-    const text = response.text;
+    text = response.text;
     if (!text) {
       throw new Error("Received an empty response from the AI model.");
     }
@@ -203,6 +197,9 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     
     return itineraryData as ItineraryPlan;
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error("Failed to parse JSON response from AI. Raw text:", text);
+    }
     console.error("Error generating itinerary with Gemini:", error);
     throw new Error("Failed to generate itinerary. The AI model might be unavailable or the request was invalid.");
   }
@@ -228,7 +225,8 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     5.  Return the **complete and updated** itinerary object, conforming strictly to the provided JSON schema.
     6.  **Maintain Alternative Suggestions:** Ensure the \`alternativeSuggestions\` section is preserved in the final output. If the user's request involves one of the suggestions (e.g., "replace the museum with that alternative restaurant you suggested"), update both the daily plan and the suggestions list accordingly. If the user's request is unrelated to the suggestions, return the original \`alternativeSuggestions\` object unmodified.
   `;
-
+  
+  let text = '';
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -236,23 +234,26 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
       config: {
         responseMimeType: 'application/json',
         responseSchema: itinerarySchema,
-        temperature: 0.7,
+        temperature: 0.5,
       }
     });
 
-    const text = response.text;
+    text = response.text;
     if (!text) {
         throw new Error("Received an empty refined response from the AI model.");
     }
     const jsonText = cleanJson(text);
     const refinedData = JSON.parse(jsonText);
     
-    if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyPlan)) {
+    if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyplan)) {
       throw new Error("Invalid refined itinerary structure received from API.");
     }
 
     return refinedData as ItineraryPlan;
   } catch (error) {
+    if (error instanceof SyntaxError) {
+      console.error("Failed to parse JSON response from AI during refinement. Raw text:", text);
+    }
     console.error("Error refining itinerary with Gemini:", error);
     throw new Error("Failed to refine itinerary.");
   }

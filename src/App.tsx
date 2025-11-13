@@ -119,6 +119,7 @@ const App: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isRefining, setIsRefining] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [refineError, setRefineError] = useState<string | null>(null);
   const [loadingMessage, setLoadingMessage] = useState(loadingMessages[0]);
   const [page, setPage] = useState<Page>('landing');
 
@@ -166,12 +167,12 @@ const App: React.FC = () => {
   const handleRefine = async (refinementPrompt: string) => {
     if (!itinerary) return;
     setIsRefining(true);
-    setError(null);
+    setRefineError(null);
     try {
       const refinedResult = await refineItinerary(itinerary, refinementPrompt);
       setItinerary(refinedResult);
     } catch (err) {
-      setError('Sorry, we couldn\'t refine your itinerary. Please try a different request.');
+      setRefineError('Sorry, we couldn\'t refine your itinerary. Please try a different request.');
       console.error(err);
     } finally {
       setIsRefining(false);
@@ -259,6 +260,8 @@ const App: React.FC = () => {
             onReset={handleReset}
             onRefine={handleRefine}
             isRefining={isRefining}
+            refineError={refineError}
+            clearRefineError={() => setRefineError(null)}
           />
         </div>
       );

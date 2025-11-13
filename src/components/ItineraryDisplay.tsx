@@ -21,6 +21,8 @@ interface Props {
   onReset: () => void;
   onRefine: (prompt: string) => Promise<void>;
   isRefining: boolean;
+  refineError: string | null;
+  clearRefineError: () => void;
 }
 
 const ActivityDetail: React.FC<{ icon: React.ReactNode; label: string; value: string }> = ({ icon, label, value }) => (
@@ -64,7 +66,7 @@ const SuggestionSection: React.FC<{ title: string; items: SuggestionItem[]; icon
 };
 
 
-const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining }) => {
+const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRefine, isRefining, refineError, clearRefineError }) => {
   const [refinementPrompt, setRefinementPrompt] = useState('');
 
   const getDayDate = (dayNumber: number): string => {
@@ -116,6 +118,13 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
       setRefinementPrompt('');
     }
   };
+
+  const handlePromptChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (refineError) {
+      clearRefineError();
+    }
+    setRefinementPrompt(e.target.value);
+  }
 
   const hasSuggestions = itinerary.alternativeSuggestions && (Object.values(itinerary.alternativeSuggestions).some(arr => Array.isArray(arr) && arr.length > 0));
 
@@ -244,13 +253,19 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
         </div>
 
         <div className="bg-background p-6 rounded-xl border border-border">
+           {refineError && (
+              <div className="mb-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md" role="alert">
+                <p className="font-bold">Refinement Error</p>
+                <p>{refineError}</p>
+              </div>
+            )}
            <h4 className="text-lg font-semibold text-primary text-center">Want to change something?</h4>
            <p className="text-center text-sm text-secondary mb-4">Ask the AI to refine your plan. e.g., "Swap the museum on Day 2 for a park."</p>
            <form onSubmit={handleRefineSubmit} className="flex flex-col sm:flex-row gap-2">
             <input 
               type="text"
               value={refinementPrompt}
-              onChange={(e) => setRefinementPrompt(e.target.value)}
+              onChange={handlePromptChange}
               placeholder="Your request..."
               disabled={isRefining}
               className="flex-grow w-full px-4 py-2 bg-surface border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-accent transition text-primary disabled:opacity-50"
