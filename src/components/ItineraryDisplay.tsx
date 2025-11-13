@@ -24,7 +24,7 @@ interface Props {
 
 const ActivityDetail: React.FC<{ icon: React.ReactNode; label: string; value: string }> = ({ icon, label, value }) => (
   <div className="flex items-start text-sm">
-    <div className="flex-shrink-0 w-5 h-5 mr-2 text-secondary">{icon}</div>
+    <div className="flex-shrink-0 w-4 h-4 md:w-5 md:h-5 mr-2 text-secondary">{icon}</div>
     <div className="text-secondary">
       <span className="font-semibold text-primary">{label}:</span> {value}
     </div>
@@ -105,7 +105,7 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
     <div className="animate-fade-in-up">
       <div id="printable-area">
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-bold">{itinerary.tripTitle}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold">{itinerary.tripTitle}</h2>
           <p className="mt-2 text-lg text-secondary max-w-2xl mx-auto">{itinerary.summary}</p>
         </div>
         
@@ -133,14 +133,14 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
           {itinerary.dailyPlan.map(day => {
             const dayDate = getDayDate(day.day);
             return (
-            <div key={day.day} className="daily-plan-card bg-background p-6 rounded-xl border border-border">
+            <div key={day.day} className="daily-plan-card bg-background p-4 md:p-6 rounded-xl border border-border">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
                 <div className="flex items-center mb-2 sm:mb-0">
                   <div className="bg-accent text-white rounded-full h-10 w-10 flex-shrink-0 flex items-center justify-center font-bold text-lg mr-4">
                     {day.day}
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold">{day.title}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold">{day.title}</h3>
                     <span className="text-sm font-medium bg-accent/10 text-accent px-2.5 py-0.5 rounded-full">{day.theme}</span>
                   </div>
                 </div>
@@ -157,34 +157,42 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
                 </div>
               )}
 
-              <div className="border-l-2 border-border/50 ml-5 pl-10 py-2 space-y-6">
+              <div className="mt-6">
                 {day.activities.map((activity, index) => (
                   <div key={index} className="relative">
-                    <div className="absolute -left-[30px] top-1.5 h-4 w-4 bg-surface border-2 border-accent rounded-full"></div>
-                    <p className="font-semibold text-accent text-lg">{activity.time}</p>
-                    <p className="text-primary font-bold text-lg">{activity.description}</p>
-                    {activity.details && <p className="text-sm text-secondary italic mt-1 mb-3">{activity.details}</p>}
-                    
-                    <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 pt-3 border-t border-border/50">
-                      {activity.distanceFromCenter && <ActivityDetail icon={<MapPinIcon />} label="Distance" value={activity.distanceFromCenter} />}
-                      {activity.tradingHours && <ActivityDetail icon={<ClockIcon />} label="Hours" value={activity.tradingHours} />}
-                      {activity.estimatedCost && <ActivityDetail icon={<CurrencyDollarIcon />} label="Cost" value={activity.estimatedCost} />}
-                      {activity.tip && <ActivityDetail icon={<LightBulbIcon />} label="Tip" value={activity.tip} />}
-                    </div>
-                    
-                    {activity.reservationLink && (
-                      <div className="mt-4">
-                        <a 
-                          href={activity.reservationLink} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center bg-gray-100 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-300 text-sm"
-                        >
-                          <CalendarIcon className="h-5 w-5 mr-2" />
-                          Book a Table
-                        </a>
-                      </div>
+                     {/* Timeline Line */}
+                    {index < day.activities.length - 1 && (
+                      <div className="absolute top-5 left-[7px] h-full w-0.5 bg-border/70"></div>
                     )}
+                     {/* Timeline Circle */}
+                    <div className="absolute top-1.5 left-0 h-4 w-4 bg-surface border-2 border-accent rounded-full"></div>
+                    
+                    <div className="pl-8 pb-8">
+                      <p className="font-semibold text-accent text-lg">{activity.time}</p>
+                      <p className="text-primary font-bold text-lg">{activity.description}</p>
+                      {activity.details && <p className="text-sm text-secondary italic mt-1 mb-3">{activity.details}</p>}
+                      
+                      <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3 pt-3 border-t border-border/50">
+                        {activity.distanceFromCenter && <ActivityDetail icon={<MapPinIcon />} label="Distance" value={activity.distanceFromCenter} />}
+                        {activity.tradingHours && <ActivityDetail icon={<ClockIcon />} label="Hours" value={activity.tradingHours} />}
+                        {activity.estimatedCost && <ActivityDetail icon={<CurrencyDollarIcon />} label="Cost" value={activity.estimatedCost} />}
+                        {activity.tip && <ActivityDetail icon={<LightBulbIcon />} label="Tip" value={activity.tip} />}
+                      </div>
+                      
+                      {activity.reservationLink && (
+                        <div className="mt-4">
+                          <a 
+                            href={activity.reservationLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center bg-gray-100 text-primary font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition-colors duration-300 text-sm"
+                          >
+                            <CalendarIcon className="h-5 w-5 mr-2" />
+                            Book a Table
+                          </a>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
