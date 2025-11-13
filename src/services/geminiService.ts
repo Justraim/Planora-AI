@@ -3,6 +3,15 @@ import type { ItineraryPreferences, ItineraryPlan } from '../types';
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
+/**
+ * Cleans the JSON string received from the AI model by removing markdown fences.
+ * @param text The raw text from the model response.
+ * @returns A clean JSON string.
+ */
+const cleanJson = (text: string): string => {
+  return text.trim().replace(/^```json\s*/, '').replace(/```$/, '');
+}
+
 const itinerarySchema = {
   type: Type.OBJECT,
   properties: {
@@ -30,7 +39,7 @@ const itinerarySchema = {
                 time: { type: Type.STRING, description: "Suggested time for the activity (e.g., 'Morning', '9:00 AM', 'Afternoon', 'Evening')." },
                 description: { type: Type.STRING, description: "A concise description of the activity." },
                 details: { type: Type.STRING, description: "Optional: A brief sentence with extra detail about the experience." },
-                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'In City Centre'." },
+                distanceFromCenter: { type: Type.STRING, description: "Estimated distance from the city center, e.g., '5km' or 'City Centre'." },
                 tradingHours: { type: Type.STRING, description: "Operating hours, e.g., '9:00 AM - 5:00 PM' or '24/7'." },
                 estimatedCost: { type: Type.STRING, description: "Estimated cost per person. This MUST follow the currency conversion rules." },
                 tip: { type: Type.STRING, description: "A single, helpful tip for the activity, e.g., 'Book tickets online to avoid queues.'" },
@@ -185,7 +194,7 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     if (!text) {
       throw new Error("Received an empty response from the AI model.");
     }
-    const jsonText = text.trim();
+    const jsonText = cleanJson(text);
     const itineraryData = JSON.parse(jsonText);
     
     if (!itineraryData.dailyPlan || !Array.isArray(itineraryData.dailyPlan)) {
@@ -235,7 +244,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     if (!text) {
         throw new Error("Received an empty refined response from the AI model.");
     }
-    const jsonText = text.trim();
+    const jsonText = cleanJson(text);
     const refinedData = JSON.parse(jsonText);
     
     if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyPlan)) {
