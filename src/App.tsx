@@ -205,19 +205,9 @@ const App: React.FC = () => {
     setPage('landing'); // Go all the way back to the landing page
   }
   
-  const handleSampleSelect = (samplePrefs: Partial<ItineraryPreferences>) => {
-    setPreferences(prev => ({
-      ...prev,
-      ...samplePrefs,
-      name: prev.name, // Keep the user's name if they've already entered it
-      travelFrom: prev.travelFrom, // Keep user's travel from location
-    }));
-    setPage('app');
-  };
-
   const renderContent = () => {
     if (page === 'landing') {
-      return <LandingPage onStart={() => setPage('app')} onSampleSelect={handleSampleSelect} />;
+      return <LandingPage onStart={() => setPage('app')} />;
     }
 
     if (page === 'about') {
