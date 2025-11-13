@@ -172,7 +172,7 @@ export const generateItinerary = async (preferences: ItineraryPreferences): Prom
     8.  **Alternative Suggestions:** Fill the \`alternativeSuggestions\` object with a few other highly-rated local spots that didn't make it into the main plan. Include restaurants, experiences, and beaches (if applicable). If a category has no relevant suggestions, return an empty array for it.
   `;
 
-  let text = '';
+  let text: string | undefined = '';
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -226,7 +226,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     6.  **Maintain Alternative Suggestions:** Ensure the \`alternativeSuggestions\` section is preserved in the final output. If the user's request involves one of the suggestions (e.g., "replace the museum with that alternative restaurant you suggested"), update both the daily plan and the suggestions list accordingly. If the user's request is unrelated to the suggestions, return the original \`alternativeSuggestions\` object unmodified.
   `;
   
-  let text = '';
+  let text: string | undefined = '';
   try {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
@@ -245,7 +245,7 @@ export const refineItinerary = async (currentItinerary: ItineraryPlan, refinemen
     const jsonText = cleanJson(text);
     const refinedData = JSON.parse(jsonText);
     
-    if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyplan)) {
+    if (!refinedData.dailyPlan || !Array.isArray(refinedData.dailyPlan)) {
       throw new Error("Invalid refined itinerary structure received from API.");
     }
 
