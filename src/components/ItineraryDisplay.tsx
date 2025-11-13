@@ -70,9 +70,11 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
   const getDayDate = (dayNumber: number): string => {
     if (!startDate) return '';
     try {
-      const date = new Date(startDate);
-      // Adjust for timezone offset by working with UTC dates
+      const parts = startDate.split('-').map((part) => parseInt(part, 10));
+      const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+      
       date.setUTCDate(date.getUTCDate() + dayNumber - 1);
+
       return date.toLocaleDateString(undefined, {
         weekday: 'long',
         year: 'numeric',
