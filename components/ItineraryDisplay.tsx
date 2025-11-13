@@ -46,15 +46,21 @@ const ItineraryDisplay: React.FC<Props> = ({ itinerary, startDate, onReset, onRe
   const getDayDate = (dayNumber: number): string => {
     if (!startDate) return '';
     try {
-      const date = new Date(startDate);
-      // Adjust for timezone offset by working with UTC dates
+      // Fix: Manually parse the 'YYYY-MM-DD' string to prevent cross-browser issues,
+      // especially on Safari where `new Date('YYYY-MM-DD')` can be unreliable.
+      const parts = startDate.split('-').map(part => parseInt(part, 10));
+      // The month argument in Date.UTC is 0-indexed (0 for January).
+      const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+
+      // Add the day number to the start date.
       date.setUTCDate(date.getUTCDate() + dayNumber - 1);
+      
       return date.toLocaleDateString(undefined, {
         weekday: 'long',
         year: 'numeric',
         month: 'long',
         day: 'numeric',
-        timeZone: 'UTC', // Ensure consistent date calculation
+        timeZone: 'UTC', // Ensure consistent date calculation across timezones.
       });
     } catch (e) {
       console.error("Invalid start date:", startDate);

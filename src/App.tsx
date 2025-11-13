@@ -104,7 +104,7 @@ const App: React.FC = () => {
     travelFrom: '',
     travelRadius: '',
     startDate: '',
-    tripDuration: '',
+    tripDuration: 1,
     numberOfTravelers: 1,
     firstTime: 'Yes',
     tripPurpose: [],
@@ -139,6 +139,15 @@ const App: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const { name, destination, travelFrom, travelRadius, startDate, tripDuration, tripPurpose, otherTripPurpose, mostExcitedAbout, otherExcitement, budget, pacing } = preferences;
+    const isFormValid = name && destination && travelFrom && travelRadius && startDate && tripDuration && tripPurpose.length > 0 && !(tripPurpose.includes('Other') && !otherTripPurpose) && mostExcitedAbout.length > 0 && !(mostExcitedAbout.includes('Other') && !otherExcitement) && budget && pacing;
+    
+    if (!isFormValid) {
+        setError("It looks like some information is missing. Please ensure all required fields are filled out before generating an itinerary.");
+        return;
+    }
+
     setIsLoading(true);
     setError(null);
     setItinerary(null);
@@ -178,7 +187,7 @@ const App: React.FC = () => {
       travelFrom: '',
       travelRadius: '',
       startDate: '',
-      tripDuration: '',
+      tripDuration: 1,
       numberOfTravelers: 1,
       firstTime: 'Yes',
       tripPurpose: [],
@@ -196,9 +205,19 @@ const App: React.FC = () => {
     setPage('landing'); // Go all the way back to the landing page
   }
   
+  const handleSampleSelect = (samplePrefs: Partial<ItineraryPreferences>) => {
+    setPreferences(prev => ({
+      ...prev,
+      ...samplePrefs,
+      name: prev.name, // Keep the user's name if they've already entered it
+      travelFrom: prev.travelFrom, // Keep user's travel from location
+    }));
+    setPage('app');
+  };
+
   const renderContent = () => {
     if (page === 'landing') {
-      return <LandingPage onStart={() => setPage('app')} />;
+      return <LandingPage onStart={() => setPage('app')} onSampleSelect={handleSampleSelect} />;
     }
 
     if (page === 'about') {

@@ -221,7 +221,7 @@ const ItineraryForm: React.FC<Props> = ({ preferences, setPreferences, onSubmit,
                     <label htmlFor="tripDuration" className="block text-sm font-medium text-secondary mb-1">How long is the trip? (days)</label>
                     <NumberStepper
                         id="tripDuration"
-                        value={preferences.tripDuration === '' ? 1 : preferences.tripDuration}
+                        value={preferences.tripDuration}
                         onChange={(value) => handleNumericChange('tripDuration', value)}
                         min={1}
                     />

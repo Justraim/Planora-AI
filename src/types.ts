@@ -4,7 +4,7 @@ export interface ItineraryPreferences {
   travelFrom: string;
   travelRadius: 'City Centre' | 'Within 15km' | 'Within 30km' | 'No preference' | '';
   startDate: string;
-  tripDuration: number | '';
+  tripDuration: number;
   numberOfTravelers: number;
   firstTime: 'Yes' | 'No';
   tripPurpose: string[];
