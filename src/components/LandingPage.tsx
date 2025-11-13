@@ -1,109 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import type { ItineraryPreferences } from '../types';
+import React from 'react';
+import { PencilIcon } from './icons/PencilIcon';
+import { WandIcon } from './icons/WandIcon';
+import { DownloadIcon } from './icons/DownloadIcon';
+import { BoltIcon } from './icons/BoltIcon';
+import { BrainIcon } from './icons/BrainIcon';
+import { BookmarkIcon } from './icons/BookmarkIcon';
+import { UserIcon } from './icons/UserIcon';
 
 interface Props {
   onStart: () => void;
-  onSampleSelect: (samplePrefs: Partial<ItineraryPreferences>) => void;
 }
 
-interface SampleItinerary {
-  title: string;
-  duration: string;
-  budget: ItineraryPreferences['budget'];
-  description: string;
-  preferences: Partial<ItineraryPreferences>;
-  imageUrl: string;
-}
+const FeatureCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+  <div className="flex items-start space-x-4">
+    <div className="flex-shrink-0 h-12 w-12 flex items-center justify-center bg-accent/10 rounded-lg text-accent">
+      {icon}
+    </div>
+    <div>
+      <h4 className="text-lg font-bold text-primary">{title}</h4>
+      <p className="mt-1 text-secondary">{children}</p>
+    </div>
+  </div>
+);
 
-const sampleItineraries: SampleItinerary[] = [
-  {
-    title: "A Fairytale Weekend in Bruges",
-    duration: "3 Days",
-    budget: "Mid range",
-    description: "Wander through cobblestone streets and cruise along scenic canals.",
-    imageUrl: "https://images.unsplash.com/photo-1596701836640-153315287d63?q=80&w=2070&auto=format&fit=crop",
-    preferences: {
-      destination: "Bruges, Belgium",
-      tripDuration: 3,
-      budget: "Mid range",
-      pacing: "Explore and Unwind",
-      tripPurpose: ["Romantic Getaway", "Cultural Exploration"],
-      mostExcitedAbout: ["Local Markets and Shopping", "Restaurants and Food"],
-    },
-  },
-  {
-    title: "Cozy Autumn in The Cotswolds",
-    duration: "4 Days",
-    budget: "Mid range",
-    description: "Charming stone villages, rolling hills, and cozy pubs.",
-    imageUrl: "https://images.unsplash.com/photo-1600579979189-53e33c407a4a?q=80&w=1974&auto=format&fit=crop",
-    preferences: {
-        destination: "The Cotswolds, UK",
-        tripDuration: 4,
-        budget: "Mid range",
-        pacing: "Go with the Flow",
-        tripPurpose: ["Holiday/Vacation"],
-        mostExcitedAbout: ["Nature and Outdoor Adventures", "Restaurants and Food"],
-    },
-  },
-  {
-    title: "Magical Northern Lights in Iceland",
-    duration: "5 Days",
-    budget: "Lux",
-    description: "Chase the Aurora Borealis and explore stunning ice caves.",
-    imageUrl: "https://images.unsplash.com/photo-1534570122622-54d5e5b6a49e?q=80&w=1974&auto=format&fit=crop",
-    preferences: {
-        destination: "Reykjavik, Iceland",
-        tripDuration: 5,
-        budget: "Lux",
-        pacing: "Maximize Every Moment",
-        tripPurpose: ["Adventure and Hiking"],
-        mostExcitedAbout: ["Nature and Outdoor Adventures", "Beaches and Scenic Views"],
-    },
-  },
-];
-
-const budgetColorMap: { [key in Exclude<ItineraryPreferences['budget'], ''>]: string } = {
-  'Budget': 'bg-green-100 text-green-800',
-  'Mid range': 'bg-blue-100 text-blue-800',
-  'Lux': 'bg-purple-100 text-purple-800',
-  'Mix': 'bg-yellow-100 text-yellow-800',
-};
-
-const SampleCard: React.FC<SampleItinerary & { onSelect: () => void }> = ({ title, duration, budget, description, onSelect, imageUrl }) => (
-    <button
-      onClick={onSelect}
-      className="relative text-left w-full h-80 rounded-2xl bg-surface border border-border shadow-subtle overflow-hidden transition-all duration-300 hover:shadow-lg group"
-    >
-      <div 
-          className="absolute inset-0 h-full w-full bg-cover bg-center transition-transform duration-500 ease-in-out group-hover:scale-110" 
-          style={{ backgroundImage: `url(${imageUrl})` }}
-      ></div>
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent"></div>
-      <div className="absolute bottom-0 left-0 p-5 text-white w-full">
-         <div className="flex items-center gap-2 mb-2">
-            <span className="text-xs font-semibold bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">{duration}</span>
-            {budget && <span className={`text-xs font-semibold px-2 py-1 rounded-full ${budgetColorMap[budget] || 'bg-gray-100 text-gray-800'}`}>{budget}</span>}
+const HowItWorksCard: React.FC<{ icon: React.ReactNode; title: string; children: React.ReactNode }> = ({ icon, title, children }) => (
+    <div className="bg-surface p-6 rounded-2xl border border-border shadow-subtle text-center">
+        <div className="mx-auto h-12 w-12 flex items-center justify-center bg-accent/10 rounded-full text-accent mb-4">
+            {icon}
         </div>
-        <h3 className="text-lg font-bold">{title}</h3>
-        <p className="text-sm mt-1 text-white/90">{description}</p>
-      </div>
-    </button>
-  );
+        <h3 className="font-bold text-lg text-primary">{title}</h3>
+        <p className="text-secondary mt-2 text-sm">{children}</p>
+    </div>
+);
 
 
-const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
-  const [displayedItineraries, setDisplayedItineraries] = useState<SampleItinerary[]>([]);
-
-  useEffect(() => {
-    // Show a consistent set of 3 random itineraries on each load
-    const shuffled = [...sampleItineraries].sort(() => 0.5 - Math.random());
-    const randomThree = shuffled.slice(0, 3);
-    setDisplayedItineraries(randomThree);
-  }, []);
-
+const LandingPage: React.FC<Props> = ({ onStart }) => {
   return (
-    <div className="space-y-24">
+    <div className="space-y-24 md:space-y-32">
+      {/* Hero Section */}
       <div className="text-center pt-8 animate-fade-in-up max-w-3xl mx-auto">
         <h1 className="text-5xl md:text-6xl font-bold">Your perfect trip, planned in seconds.</h1>
         <p className="mt-6 text-lg text-secondary">
@@ -111,24 +45,63 @@ const LandingPage: React.FC<Props> = ({ onStart, onSampleSelect }) => {
         </p>
         <button
           onClick={onStart}
-          className="mt-8 bg-accent text-white font-semibold py-3 px-6 rounded-lg hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent/30 transition-all duration-300"
+          className="mt-8 bg-accent text-white font-bold py-3 px-8 rounded-lg hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent/30 transition-all duration-300 text-lg"
         >
           Create My Itinerary
         </button>
       </div>
-
+      
+      {/* How It Works Section */}
       <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-3xl font-bold text-center mb-8">Or get inspired</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedItineraries.map((itinerary) => (
-            <SampleCard 
-              key={itinerary.title} 
-              {...itinerary} 
-              onSelect={() => onSampleSelect(itinerary.preferences)}
-            />
-          ))}
+        <div className="text-center max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold">How It Works</h2>
+        </div>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            <HowItWorksCard icon={<PencilIcon className="w-6 h-6" />} title="1. Tell us your plans">
+                Fill in quick preferences for your interests, dates, and travel style.
+            </HowItWorksCard>
+            <HowItWorksCard icon={<WandIcon className="w-6 h-6" />} title="2. AI crafts your journey">
+                Our smart planner curates activities, routes, and dining options instantly.
+            </HowItWorksCard>
+            <HowItWorksCard icon={<DownloadIcon className="w-6 h-6" />} title="3. Download or customise">
+                Get a ready-to-go itinerary or tweak it anytime to make it perfect.
+            </HowItWorksCard>
         </div>
       </div>
+      
+      {/* Why Choose Us Section */}
+      <div className="animate-fade-in-up max-w-4xl mx-auto" style={{ animationDelay: '0.4s' }}>
+         <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold">Why Travellers Choose Itinerae</h2>
+        </div>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-12">
+          <FeatureCard icon={<BoltIcon className="w-7 h-7" />} title="Instant Planning">
+            Get a full itinerary in seconds, not hours.
+          </FeatureCard>
+          <FeatureCard icon={<BrainIcon className="w-7 h-7" />} title="Smarter with Every Trip">
+            Powered by advanced AI and real traveller data.
+          </FeatureCard>
+          <FeatureCard icon={<BookmarkIcon className="w-7 h-7" />} title="Effortless Bookings">
+            Reserve experiences directly from your itinerary.
+          </FeatureCard>
+          <FeatureCard icon={<UserIcon className="w-7 h-7" />} title="Made for You">
+            Every journey is tailored to your unique travel style.
+          </FeatureCard>
+        </div>
+      </div>
+      
+      {/* Final CTA Section */}
+      <div className="text-center py-16 bg-surface rounded-2xl border border-border animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+        <h2 className="text-4xl font-bold">Ready for your next adventure?</h2>
+        <p className="mt-4 text-secondary max-w-xl mx-auto">Let's turn your travel dreams into a reality. Click below to start planning.</p>
+        <button
+          onClick={onStart}
+          className="mt-8 bg-accent text-white font-bold py-3 px-8 rounded-lg hover:bg-accent-hover focus:outline-none focus:ring-4 focus:ring-accent/30 transition-all duration-300 text-lg"
+        >
+          Start Planning Now
+        </button>
+      </div>
+
     </div>
   );
 };
