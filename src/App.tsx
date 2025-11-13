@@ -88,8 +88,8 @@ const termsOfServiceContent = (
 
 
 const loadingMessages = [
-  "Crafting your personalised adventure...",
-  "Analysing the best local gems...",
+  "Crafting your personalized adventure...",
+  "Analyzing the best local gems...",
   "Mapping out your daily adventures...",
   "Consulting our virtual globetrotter...",
   "Packing your virtual bags..."
